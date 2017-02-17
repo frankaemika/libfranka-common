@@ -5,6 +5,7 @@
 namespace research_interface {
 
 struct RobotState {
+  double message_id;
   std::array<double, 7> q_start;
   std::array<double, 16> O_T_EE_start;
   std::array<double, 2> elbow_start;
@@ -23,13 +24,13 @@ struct RobotState {
 };
 
 struct MotionGeneratorCommand {
+  double timestamp;
   std::array<double, 7> q_d;
   std::array<double, 7> dq_d;
   std::array<double, 7> ddq_d;
   std::array<double, 16> O_T_EE_d;
   std::array<double, 6> O_dP_EE_d;
   std::array<double, 2> elbow_d;
-  std::array<double, 2> delbow_d;
   bool valid_elbow;
   bool motion_generation_finished;
 };
@@ -39,6 +40,7 @@ struct ControllerCommand {
 };
 
 struct RobotCommand {
+  double message_id;
   MotionGeneratorCommand motion;
   ControllerCommand control;
 };
