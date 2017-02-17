@@ -18,8 +18,8 @@ struct RobotState {
   std::array<double, 7> joint_collision;
   std::array<double, 6> cartesian_collision;
   std::array<double, 7> tau_ext_hat_filtered;
-  std::array<double, 6> O_F_ext_hat_EE;
-  std::array<double, 6> EE_F_ext_hat_EE;
+  std::array<double, 6> O_F_ext_hat_K;
+  std::array<double, 6> K_F_ext_hat_K;
 };
 
 struct MotionGeneratorCommand {
