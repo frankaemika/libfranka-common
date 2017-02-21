@@ -17,6 +17,25 @@ enum class Function : uint32_t {
   kStopController = 4
 };
 
+template <Function f>
+struct BaseReply {
+  BaseReply() : function(f) {}
+  const Function function;
+};
+
+template <Function f>
+struct BaseModeChangeReply : public BaseReply<f> {
+  enum class Status : uint32_t {
+    kSuccess = 0,
+    kNotConnected = 1,
+    kFinished = 2,
+    kRejected = 3
+  };
+
+  BaseModeChangeReply(Status status) : status(status) {}
+  const Status status;
+};
+
 struct ConnectRequest {
   ConnectRequest(uint16_t udp_port)
       : function(Function::kConnect), version(kVersion), udp_port(udp_port) {}
@@ -26,7 +45,7 @@ struct ConnectRequest {
   const uint16_t udp_port;
 };
 
-struct ConnectReply {
+struct ConnectReply : public BaseReply<Function::kConnect>{
   enum class Status : uint32_t {
     kSuccess = 0,
     kIncompatibleLibraryVersion = 1
@@ -53,24 +72,16 @@ struct StartMotionGeneratorRequest {
   const Type type;
 };
 
-struct StartMotionGeneratorReply {
+struct StartMotionGeneratorReply : public BaseReply<Function::kStartMotionGenerator> {
   enum class Status : uint32_t {
     kSuccess = 0,
     kNotConnected = 1,
-    kInvalidType = 2
+    kInvalidType = 2,
+    kFinished = 2,
+    kRejected = 3
   };
 
   StartMotionGeneratorReply(Status status) : status(status) {}
-  const Status status;
-};
-
-struct BaseModeChangeReply {
-  enum class Status : uint32_t {
-    kSuccess = 0,
-    kNotConnected = 1
-  };
-
-  BaseModeChangeReply(Status status) : status(status) {}
   const Status status;
 };
 
@@ -81,7 +92,7 @@ struct StopMotionGeneratorRequest {
   const Function function;
 };
 
-struct StopMotionGeneratorReply : public BaseModeChangeReply {
+struct StopMotionGeneratorReply : public BaseModeChangeReply<Function::kStopMotionGenerator> {
   using BaseModeChangeReply::BaseModeChangeReply;
 };
 
@@ -92,7 +103,7 @@ struct StartControllerRequest {
   const Function function;
 };
 
-struct StartControllerReply : public BaseModeChangeReply {
+struct StartControllerReply : public BaseModeChangeReply<Function::kStartController> {
   using BaseModeChangeReply::BaseModeChangeReply;
 };
 
@@ -103,7 +114,7 @@ struct StopControllerRequest {
   const Function function;
 };
 
-struct StopControllerReply : public BaseModeChangeReply {
+struct StopControllerReply : public BaseModeChangeReply<Function::kStopController> {
   using BaseModeChangeReply::BaseModeChangeReply;
 };
 
