@@ -77,8 +77,8 @@ struct StartMotionGeneratorReply : public BaseReply<Function::kStartMotionGenera
     kSuccess = 0,
     kNotConnected = 1,
     kInvalidType = 2,
-    kFinished = 2,
-    kRejected = 3
+    kFinished = 3,
+    kRejected = 4
   };
 
   StartMotionGeneratorReply(Status status) : status(status) {}
