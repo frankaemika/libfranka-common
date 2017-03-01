@@ -1,6 +1,7 @@
 #pragma once
 
 #include <array>
+#include <cinttypes>
 
 namespace research_interface {
 
@@ -13,7 +14,7 @@ enum class MotionGeneratorMode : uint8_t {
 };
 
 struct RobotState {
-  double message_id;
+  uint32_t message_id;
   std::array<double, 7> q_start;
   std::array<double, 16> O_T_EE_start;
   std::array<double, 2> elbow_start;
@@ -50,7 +51,7 @@ struct ControllerCommand {
 };
 
 struct RobotCommand {
-  double message_id;
+  uint32_t message_id;
   MotionGeneratorCommand motion;
   ControllerCommand control;
 };
