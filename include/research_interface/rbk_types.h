@@ -1,11 +1,20 @@
 #pragma once
 
 #include <array>
+#include <cinttypes>
 
 namespace research_interface {
 
+enum class MotionGeneratorMode : uint8_t {
+  kIdle = 0,
+  kJointPosition,
+  kJointVelocity,
+  kCartesianPosition,
+  kCartesianVelocity
+};
+
 struct RobotState {
-  double message_id;
+  uint32_t message_id;
   std::array<double, 7> q_start;
   std::array<double, 16> O_T_EE_start;
   std::array<double, 2> elbow_start;
@@ -21,6 +30,8 @@ struct RobotState {
   std::array<double, 7> tau_ext_hat_filtered;
   std::array<double, 6> O_F_ext_hat_K;
   std::array<double, 6> K_F_ext_hat_K;
+  MotionGeneratorMode motion_generator_mode;
+  bool external_controller;
 };
 
 struct MotionGeneratorCommand {
@@ -40,7 +51,7 @@ struct ControllerCommand {
 };
 
 struct RobotCommand {
-  double message_id;
+  uint32_t message_id;
   MotionGeneratorCommand motion;
   ControllerCommand control;
 };
