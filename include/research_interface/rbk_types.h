@@ -15,9 +15,9 @@ enum class MotionGeneratorMode : uint8_t {
 
 struct RobotState {
   uint32_t message_id;
-  std::array<double, 7> q_start;
-  std::array<double, 16> O_T_EE_start;
-  std::array<double, 2> elbow_start;
+ // std::array<double, 7> q_start;
+  std::array<double, 16> O_T_EE;
+  std::array<double, 2> elbow;
   std::array<double, 7> tau_J;
   std::array<double, 7> dtau_J;
   std::array<double, 7> q;
@@ -35,7 +35,6 @@ struct RobotState {
 };
 
 struct MotionGeneratorCommand {
-  double timestamp;
   std::array<double, 7> q_d;
   std::array<double, 7> dq_d;
   std::array<double, 7> ddq_d;
