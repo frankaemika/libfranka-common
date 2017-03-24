@@ -39,7 +39,6 @@ struct RobotState {
   std::array<double, 6> K_F_ext_hat_K;
   MotionGeneratorMode motion_generator_mode;
   ControllerMode controller_mode;
-  bool external_controller;
 };
 
 struct MotionGeneratorCommand {
