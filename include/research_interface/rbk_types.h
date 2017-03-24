@@ -14,11 +14,11 @@ enum class MotionGeneratorMode : uint8_t {
 };
 
 enum class ControllerMode : uint8_t {
-  motor_PD = 0,
-  joint_position,
-  joint_impedance,
-  cartesian_impedance,
-  external_controller
+  kMotorPD = 0,
+  kJointPosition,
+  kJointImpedance,
+  kCartesianImpedance,
+  kExternalController
 };
 
 struct RobotState {
