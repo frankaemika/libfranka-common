@@ -150,10 +150,10 @@ struct GetCartesianLimit
 struct SetControllerMode
     : public CommandBase<SetControllerMode, Function::kSetControllerMode> {
   enum class ControllerMode : uint32_t {
-    motor_PD,
-    joint_position,
-    joint_impedance,
-    cartesian_impedance
+    kMotorPD,
+    kJointPosition,
+    kJointImpedance,
+    kCartesianImpedance
   };
 
   struct Request : public RequestBase<SetControllerMode> {
