@@ -1,5 +1,6 @@
 #pragma once
 
+#include <array>
 #include <cinttypes>
 #include <type_traits>
 
@@ -209,9 +210,9 @@ struct SetLoad : public CommandBase<SetLoad, Function::kSetLoad> {
             std::array<double, 9>& I_load)
         : m_load(m_load), F_x_Cload(F_x_Cload), I_load(I_load) {}
 
-    double m_load;
-    std::array<double, 3> F_x_Cload;
-    std::array<double, 9> I_load;
+    const double m_load;
+    const std::array<double, 3> F_x_Cload;
+    const std::array<double, 9> I_load;
   };
 };
 
@@ -222,7 +223,7 @@ struct SetTimeScalingFactor
     Request(double time_scaling_factor)
         : time_scaling_factor(time_scaling_factor) {}
 
-    double time_scaling_factor;
+    const double time_scaling_factor;
   };
 };
 
