@@ -118,7 +118,34 @@ struct StopController
     : public CommandBase<StopController, Function::kStopController> {};
 
 struct GetCartesianLimit
-    : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {};
+    : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {
+  enum class Status : uint32_t { kSuccess, kReceived };
+
+  struct Response : public ResponseBase<GetCartesianLimit> {
+    Response(Status status)
+        : ResponseBase<GetCartesianLimit>(status),
+          object_p_min{},
+          object_p_max{},
+          object_frame{},
+          object_activation{} {}
+
+    Response(Status status,
+             const std::array<double, 3>& object_p_min,
+             const std::array<double, 3>& object_p_max,
+             const std::array<double, 16>& object_frame,
+             bool object_activation)
+        : ResponseBase<GetCartesianLimit>(status),
+          object_p_min(object_p_min),
+          object_p_max(object_p_max),
+          object_frame(object_frame),
+          object_activation(object_activation) {}
+
+    const std::array<double, 3> object_p_min;
+    const std::array<double, 3> object_p_max;
+    const std::array<double, 16> object_frame;
+    const bool object_activation;
+  };
+};
 
 struct SetControllerMode
     : public CommandBase<SetControllerMode, Function::kSetControllerMode> {
