@@ -15,7 +15,19 @@ enum class Function : uint32_t {
   kStartMotionGenerator,
   kStopMotionGenerator,
   kStartController,
-  kStopController
+  kStopController,
+  kGetCartesianLimit,
+  kSetControllerMode,
+  kSetCollisionBehavior,
+  kSetJointImpedance,
+  kSetCartesianImpedance,
+  kSetGuidingMode,
+  kSetEEToK,
+  kSetFToEE,
+  kSetLoad,
+  kSetTimeScalingFactor,
+  kAutomaticErrorRecovery,
+  kResetExternalTorqueAndForceMax
 };
 
 template <typename T>
@@ -103,5 +115,123 @@ struct StartController
 
 struct StopController
     : public CommandBase<StopController, Function::kStopController> {};
+
+struct GetCartesianLimit
+    : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {};
+
+struct SetControllerMode
+    : public CommandBase<SetControllerMode, Function::kSetControllerMode> {
+  enum class ControllerMode : uint32_t {
+    motor_PD,
+    joint_position,
+    joint_impedance,
+    cartesian_impedance
+  };
+
+  struct Request : public RequestBase<SetControllerMode> {
+    Request(ControllerMode mode) : mode(mode) {}
+
+    const ControllerMode mode;
+  };
+};
+
+struct SetCollisionBehavior
+    : public CommandBase<SetCollisionBehavior,
+                         Function::kSetCollisionBehavior> {
+  struct Request : public RequestBase<SetCollisionBehavior> {
+    Request(const std::array<double, 14> torque_thresholds_acceleration,
+            const std::array<double, 14> torque_thresholds_nominal,
+            const std::array<double, 12> force_thresholds_acceleration,
+            const std::array<double, 12> force_thresholds_nominal)
+        : torque_thresholds_acceleration(torque_thresholds_acceleration),
+          torque_thresholds_nominal(torque_thresholds_nominal),
+          force_thresholds_acceleration(force_thresholds_acceleration),
+          force_thresholds_nominal(force_thresholds_nominal) {}
+
+    const std::array<double, 14> torque_thresholds_acceleration;
+    const std::array<double, 14> torque_thresholds_nominal;
+
+    const std::array<double, 12> force_thresholds_acceleration;
+    const std::array<double, 12> force_thresholds_nominal;
+  };
+};
+
+struct SetJointImpedance
+    : public CommandBase<SetJointImpedance, Function::kSetJointImpedance> {
+  struct Request : public RequestBase<SetJointImpedance> {
+    Request(const std::array<double, 7> K_theta) : K_theta(K_theta) {}
+
+    const std::array<double, 7> K_theta;
+  };
+};
+
+struct SetCartesianImpedance
+    : public CommandBase<SetCartesianImpedance,
+                         Function::kSetCartesianImpedance> {
+  struct Request : public RequestBase<SetCartesianImpedance> {
+    Request(const std::array<double, 6> K_x) : K_x(K_x) {}
+
+    const std::array<double, 6> K_x;
+  };
+};
+
+struct SetGuidingMode
+    : public CommandBase<SetGuidingMode, Function::kSetGuidingMode> {
+  struct Request : public RequestBase<SetGuidingMode> {
+    Request(const std::array<bool, 6>& guiding_mode, bool nullspace)
+        : guiding_mode(guiding_mode), nullspace(nullspace) {}
+
+    const std::array<bool, 6> guiding_mode;
+    const bool nullspace;
+  };
+};
+
+struct SetEEToK : public CommandBase<SetEEToK, Function::kSetEEToK> {
+  struct Request : public RequestBase<SetEEToK> {
+    Request(const std::array<double, 16>& EE_T_K) : EE_T_K(EE_T_K) {}
+
+    const std::array<double, 16> EE_T_K;
+  };
+};
+
+struct SetFToEE : public CommandBase<SetFToEE, Function::kSetFToEE> {
+  struct Request : public RequestBase<SetFToEE> {
+    Request(const std::array<double, 16>& F_T_EE) : F_T_EE(F_T_EE) {}
+
+    const std::array<double, 16> F_T_EE;
+  };
+};
+
+struct SetLoad : public CommandBase<SetLoad, Function::kSetLoad> {
+  struct Request : public RequestBase<SetLoad> {
+    Request(double m_load,
+            std::array<double, 3>& F_x_Cload,
+            std::array<double, 9>& I_load)
+        : m_load(m_load), F_x_Cload(F_x_Cload), I_load(I_load) {}
+
+    double m_load;
+    std::array<double, 3> F_x_Cload;
+    std::array<double, 9> I_load;
+  };
+};
+
+struct SetTimeScalingFactor
+    : public CommandBase<SetTimeScalingFactor,
+                         Function::kSetTimeScalingFactor> {
+  struct Request : public RequestBase<SetLoad> {
+    Request(double time_scaling_factor)
+        : time_scaling_factor(time_scaling_factor) {}
+
+    double time_scaling_factor;
+  };
+};
+
+struct AutomaticErrorRecovery
+    : public CommandBase<AutomaticErrorRecovery,
+                         Function::kAutomaticErrorRecovery> {};
+
+struct ResetExternalTorqueAndForceMax
+    : public CommandBase<ResetExternalTorqueAndForceMax,
+                         Function::kResetExternalTorqueAndForceMax> {};
 
 }  // namespace research_interface
