@@ -119,7 +119,7 @@ struct StopController
 
 struct GetCartesianLimit
     : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {
-  enum class Status : uint32_t { kSuccess, kReceived };
+  enum class Status : uint32_t { kSuccess, kFinished };
 
   struct Response : public ResponseBase<GetCartesianLimit> {
     Response(Status status)
