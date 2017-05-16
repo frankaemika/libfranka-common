@@ -262,7 +262,7 @@ struct SetLoad : public CommandBase<SetLoad, Function::kSetLoad> {
 struct SetTimeScalingFactor
     : public CommandBase<SetTimeScalingFactor,
                          Function::kSetTimeScalingFactor> {
-  struct Request : public RequestBase<SetLoad> {
+  struct Request : public RequestBase<SetTimeScalingFactor> {
     Request(double time_scaling_factor)
         : time_scaling_factor(time_scaling_factor) {}
 
