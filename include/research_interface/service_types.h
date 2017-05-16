@@ -59,7 +59,12 @@ template <typename T, Function F>
 struct CommandBase {
   static constexpr Function kFunction = F;
 
-  enum class Status : uint32_t { kSuccess };
+  enum class Status : uint32_t {
+    kSuccess,
+    kAborted,
+    kRejected,
+    kError
+  };
 
   using Request = RequestBase<T>;
   using Response = ResponseBase<T>;
@@ -94,10 +99,11 @@ struct StartMotionGenerator
 
   enum class Status : uint32_t {
     kSuccess,
-    kInvalidType,
-    kFinished,
     kAborted,
-    kRejected
+    kRejected,
+    kError,
+    kInvalidType,
+    kFinished
   };
 
   struct Request : public RequestBase<StartMotionGenerator> {
@@ -119,8 +125,6 @@ struct StopController
 
 struct GetCartesianLimit
     : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {
-  enum class Status : uint32_t { kSuccess, kFinished };
-
   struct Response : public ResponseBase<GetCartesianLimit> {
     Response(Status status)
         : ResponseBase<GetCartesianLimit>(status),
