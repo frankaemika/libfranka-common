@@ -59,12 +59,7 @@ template <typename T, Function F>
 struct CommandBase {
   static constexpr Function kFunction = F;
 
-  enum class Status : uint32_t {
-    kSuccess,
-    kAborted,
-    kRejected,
-    kError
-  };
+  enum class Status : uint32_t { kSuccess, kAborted, kRejected, kError };
 
   using Request = RequestBase<T>;
   using Response = ResponseBase<T>;
@@ -170,20 +165,38 @@ struct SetCollisionBehavior
     : public CommandBase<SetCollisionBehavior,
                          Function::kSetCollisionBehavior> {
   struct Request : public RequestBase<SetCollisionBehavior> {
-    Request(const std::array<double, 14> torque_thresholds_acceleration,
-            const std::array<double, 14> torque_thresholds_nominal,
-            const std::array<double, 12> force_thresholds_acceleration,
-            const std::array<double, 12> force_thresholds_nominal)
-        : torque_thresholds_acceleration(torque_thresholds_acceleration),
-          torque_thresholds_nominal(torque_thresholds_nominal),
-          force_thresholds_acceleration(force_thresholds_acceleration),
-          force_thresholds_nominal(force_thresholds_nominal) {}
+    Request(const std::array<double, 7> lower_torque_thresholds_acceleration,
+            const std::array<double, 7> upper_torque_thresholds_acceleration,
+            const std::array<double, 7> lower_torque_thresholds_nominal,
+            const std::array<double, 7> upper_torque_thresholds_nominal,
+            const std::array<double, 6> lower_force_thresholds_acceleration,
+            const std::array<double, 6> upper_force_thresholds_acceleration,
+            const std::array<double, 6> lower_force_thresholds_nominal,
+            const std::array<double, 6> upper_force_thresholds_nominal)
+        : lower_torque_thresholds_acceleration(
+              lower_torque_thresholds_acceleration),
+          upper_torque_thresholds_acceleration(
+              upper_torque_thresholds_acceleration),
+          lower_torque_thresholds_nominal(lower_torque_thresholds_nominal),
+          upper_torque_thresholds_nominal(upper_torque_thresholds_nominal),
+          lower_force_thresholds_acceleration(
+              lower_force_thresholds_acceleration),
+          upper_force_thresholds_acceleration(
+              upper_force_thresholds_acceleration),
+          lower_force_thresholds_nominal(lower_force_thresholds_nominal),
+          upper_force_thresholds_nominal(upper_force_thresholds_nominal) {}
 
-    const std::array<double, 14> torque_thresholds_acceleration;
-    const std::array<double, 14> torque_thresholds_nominal;
+    const std::array<double, 7> lower_torque_thresholds_acceleration;
+    const std::array<double, 7> upper_torque_thresholds_acceleration;
 
-    const std::array<double, 12> force_thresholds_acceleration;
-    const std::array<double, 12> force_thresholds_nominal;
+    const std::array<double, 7> lower_torque_thresholds_nominal;
+    const std::array<double, 7> upper_torque_thresholds_nominal;
+
+    const std::array<double, 6> lower_force_thresholds_acceleration;
+    const std::array<double, 6> upper_force_thresholds_acceleration;
+
+    const std::array<double, 6> lower_force_thresholds_nominal;
+    const std::array<double, 6> upper_force_thresholds_nominal;
   };
 };
 
