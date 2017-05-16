@@ -102,8 +102,7 @@ struct StartMotionGenerator
     kAborted,
     kRejected,
     kError,
-    kInvalidType,
-    kFinished
+    kMotionStarted
   };
 
   struct Request : public RequestBase<StartMotionGenerator> {
