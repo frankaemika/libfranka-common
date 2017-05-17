@@ -119,6 +119,12 @@ struct StopController
 
 struct GetCartesianLimit
     : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {
+  struct Request : public RequestBase<GetCartesianLimit> {
+    Request(int32_t id) : id(id) {}
+
+    const int32_t id;
+  };
+
   struct Response : public ResponseBase<GetCartesianLimit> {
     Response(Status status) : Response(status, {}, {}, {}, {}) {}
 
