@@ -4,85 +4,85 @@
 
 namespace research_interface {
 
-template<typename T>
+template <typename T>
 struct CommandTraits {};
 
-template<>
+template <>
 struct CommandTraits<StartMotionGenerator> {
   static constexpr const char* kName = "Start Motion Generator";
 };
 
-template<>
+template <>
 struct CommandTraits<StopMotionGenerator> {
   static constexpr const char* kName = "Stop Motion Generator";
 };
 
-template<>
+template <>
 struct CommandTraits<StartController> {
   static constexpr const char* kName = "Start Controller";
 };
 
-template<>
+template <>
 struct CommandTraits<StopController> {
   static constexpr const char* kName = "Stop Controller";
 };
 
-template<>
+template <>
 struct CommandTraits<GetCartesianLimit> {
   static constexpr const char* kName = "Get Cartesian Limit";
 };
 
-template<>
+template <>
 struct CommandTraits<SetControllerMode> {
   static constexpr const char* kName = "Set Controller Mode";
 };
 
-template<>
+template <>
 struct CommandTraits<SetCollisionBehavior> {
   static constexpr const char* kName = "Set Collision Behavior";
 };
 
-template<>
+template <>
 struct CommandTraits<SetJointImpedance> {
   static constexpr const char* kName = "Set Joint Impedance";
 };
 
-template<>
+template <>
 struct CommandTraits<SetCartesianImpedance> {
   static constexpr const char* kName = "Set Cartesian Impedance";
 };
 
-template<>
+template <>
 struct CommandTraits<SetGuidingMode> {
   static constexpr const char* kName = "Set Guiding Mode";
 };
 
-template<>
+template <>
 struct CommandTraits<SetEEToK> {
   static constexpr const char* kName = "Set EE to K";
 };
 
-template<>
+template <>
 struct CommandTraits<SetFToEE> {
   static constexpr const char* kName = "Set F to EE";
 };
 
-template<>
+template <>
 struct CommandTraits<SetLoad> {
   static constexpr const char* kName = "Set Load";
 };
 
-template<>
+template <>
 struct CommandTraits<SetTimeScalingFactor> {
   static constexpr const char* kName = "Set Time Scaling Factor";
 };
 
-template<>
+template <>
 struct CommandTraits<AutomaticErrorRecovery> {
   static constexpr const char* kName = "Automatic Error Recovery";
 };
 
-template<>
+template <>
 struct CommandTraits<ResetExternalTorqueAndForceMax> {
   static constexpr const char* kName = "Reset External Torque and Force Max";
 };

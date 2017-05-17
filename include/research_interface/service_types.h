@@ -120,12 +120,7 @@ struct StopController
 struct GetCartesianLimit
     : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {
   struct Response : public ResponseBase<GetCartesianLimit> {
-    Response(Status status)
-        : ResponseBase<GetCartesianLimit>(status),
-          object_p_min{},
-          object_p_max{},
-          object_frame{},
-          object_activation{} {}
+    Response(Status status) : Response(status, {}, {}, {}, {}) {}
 
     Response(Status status,
              const std::array<double, 3>& object_p_min,
