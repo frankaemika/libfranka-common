@@ -59,7 +59,7 @@ template <typename T, Function F>
 struct CommandBase {
   static constexpr Function kFunction = F;
 
-  enum class Status : uint32_t { kSuccess, kAborted, kRejected, kError };
+  enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted };
 
   using Request = RequestBase<T>;
   using Response = ResponseBase<T>;
@@ -96,7 +96,7 @@ struct StartMotionGenerator
     kSuccess,
     kAborted,
     kRejected,
-    kError,
+    kPreempted,
     kMotionStarted
   };
 
