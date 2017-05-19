@@ -250,8 +250,8 @@ struct SetFToEE : public CommandBase<SetFToEE, Function::kSetFToEE> {
 struct SetLoad : public CommandBase<SetLoad, Function::kSetLoad> {
   struct Request : public RequestBase<SetLoad> {
     Request(double m_load,
-            std::array<double, 3>& F_x_Cload,
-            std::array<double, 9>& I_load)
+            const std::array<double, 3>& F_x_Cload,
+            const std::array<double, 9>& I_load)
         : m_load(m_load), F_x_Cload(F_x_Cload), I_load(I_load) {}
 
     const double m_load;
