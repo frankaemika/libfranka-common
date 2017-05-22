@@ -82,9 +82,4 @@ struct CommandTraits<AutomaticErrorRecovery> {
   static constexpr const char* kName = "Automatic Error Recovery";
 };
 
-template <>
-struct CommandTraits<ResetExternalTorqueAndForceMax> {
-  static constexpr const char* kName = "Reset External Torque and Force Max";
-};
-
 }  // namespace research_interface
