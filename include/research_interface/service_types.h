@@ -27,8 +27,7 @@ enum class Function : uint32_t {
   kSetFToEE,
   kSetLoad,
   kSetTimeScalingFactor,
-  kAutomaticErrorRecovery,
-  kResetExternalTorqueAndForceMax
+  kAutomaticErrorRecovery
 };
 
 template <typename T>
@@ -274,9 +273,5 @@ struct SetTimeScalingFactor
 struct AutomaticErrorRecovery
     : public CommandBase<AutomaticErrorRecovery,
                          Function::kAutomaticErrorRecovery> {};
-
-struct ResetExternalTorqueAndForceMax
-    : public CommandBase<ResetExternalTorqueAndForceMax,
-                         Function::kResetExternalTorqueAndForceMax> {};
 
 }  // namespace research_interface
