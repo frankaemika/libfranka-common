@@ -33,32 +33,25 @@ enum class Function : uint32_t {
 
 template <typename T>
 struct Zero {
-  Zero() {
-    std::memset(this, 0, sizeof(T));
-  }
+  Zero() { std::memset(this, 0, sizeof(T)); }
 };
 
 template <typename T>
 struct RequestBase : Zero<typename T::Request> {
-  RequestBase() : function(T::kFunction) {
-  }
+  RequestBase() : function(T::kFunction) {}
   const Function function;
 };
 
 template <typename T>
 struct ResponseBase : Zero<typename T::Response> {
-  ResponseBase(typename T::Status status)
-      : function(T::kFunction), status(status) {
-  }
+  ResponseBase(typename T::Status status) : function(T::kFunction), status(status) {}
 
   const Function function;
   const typename T::Status status;
 
-  static_assert(std::is_enum<decltype(status)>::value,
-                "Status must be an enum.");
+  static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
   static_assert(
-      std::is_same<typename std::underlying_type<decltype(status)>::type,
-                   uint32_t>::value,
+      std::is_same<typename std::underlying_type<decltype(status)>::type, uint32_t>::value,
       "Status must be of type uint32_t.");
   static_assert(static_cast<uint32_t>(decltype(status)::kSuccess) == 0,
                 "Status must define kSuccess with value of 0.");
@@ -92,8 +85,7 @@ struct Connect : CommandBase<Connect, Function::kConnect> {
 };
 
 struct StartMotionGenerator
-    : public CommandBase<StartMotionGenerator,
-                         Function::kStartMotionGenerator> {
+    : public CommandBase<StartMotionGenerator, Function::kStartMotionGenerator> {
   enum class MotionGeneratorMode : uint32_t {
     kJointPosition,
     kJointVelocity,
@@ -101,13 +93,7 @@ struct StartMotionGenerator
     kCartesianVelocity
   };
 
-  enum class Status : uint32_t {
-    kSuccess,
-    kAborted,
-    kRejected,
-    kPreempted,
-    kMotionStarted
-  };
+  enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted, kMotionStarted };
 
   struct Request : public RequestBase<StartMotionGenerator> {
     Request(MotionGeneratorMode mode) : mode(mode) {}
@@ -117,17 +103,13 @@ struct StartMotionGenerator
 };
 
 struct StopMotionGenerator
-    : public CommandBase<StopMotionGenerator, Function::kStopMotionGenerator> {
-};
+    : public CommandBase<StopMotionGenerator, Function::kStopMotionGenerator> {};
 
-struct StartController
-    : public CommandBase<StartController, Function::kStartController> {};
+struct StartController : public CommandBase<StartController, Function::kStartController> {};
 
-struct StopController
-    : public CommandBase<StopController, Function::kStopController> {};
+struct StopController : public CommandBase<StopController, Function::kStopController> {};
 
-struct GetCartesianLimit
-    : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {
+struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {
   struct Request : public RequestBase<GetCartesianLimit> {
     Request(int32_t id) : id(id) {}
 
@@ -155,8 +137,7 @@ struct GetCartesianLimit
   };
 };
 
-struct SetControllerMode
-    : public CommandBase<SetControllerMode, Function::kSetControllerMode> {
+struct SetControllerMode : public CommandBase<SetControllerMode, Function::kSetControllerMode> {
   enum class ControllerMode : uint32_t {
     kMotorPD,
     kJointPosition,
@@ -172,8 +153,7 @@ struct SetControllerMode
 };
 
 struct SetCollisionBehavior
-    : public CommandBase<SetCollisionBehavior,
-                         Function::kSetCollisionBehavior> {
+    : public CommandBase<SetCollisionBehavior, Function::kSetCollisionBehavior> {
   struct Request : public RequestBase<SetCollisionBehavior> {
     Request(const std::array<double, 7> lower_torque_thresholds_acceleration,
             const std::array<double, 7> upper_torque_thresholds_acceleration,
@@ -183,16 +163,12 @@ struct SetCollisionBehavior
             const std::array<double, 6> upper_force_thresholds_acceleration,
             const std::array<double, 6> lower_force_thresholds_nominal,
             const std::array<double, 6> upper_force_thresholds_nominal)
-        : lower_torque_thresholds_acceleration(
-              lower_torque_thresholds_acceleration),
-          upper_torque_thresholds_acceleration(
-              upper_torque_thresholds_acceleration),
+        : lower_torque_thresholds_acceleration(lower_torque_thresholds_acceleration),
+          upper_torque_thresholds_acceleration(upper_torque_thresholds_acceleration),
           lower_torque_thresholds_nominal(lower_torque_thresholds_nominal),
           upper_torque_thresholds_nominal(upper_torque_thresholds_nominal),
-          lower_force_thresholds_acceleration(
-              lower_force_thresholds_acceleration),
-          upper_force_thresholds_acceleration(
-              upper_force_thresholds_acceleration),
+          lower_force_thresholds_acceleration(lower_force_thresholds_acceleration),
+          upper_force_thresholds_acceleration(upper_force_thresholds_acceleration),
           lower_force_thresholds_nominal(lower_force_thresholds_nominal),
           upper_force_thresholds_nominal(upper_force_thresholds_nominal) {}
 
@@ -210,8 +186,7 @@ struct SetCollisionBehavior
   };
 };
 
-struct SetJointImpedance
-    : public CommandBase<SetJointImpedance, Function::kSetJointImpedance> {
+struct SetJointImpedance : public CommandBase<SetJointImpedance, Function::kSetJointImpedance> {
   struct Request : public RequestBase<SetJointImpedance> {
     Request(const std::array<double, 7> K_theta) : K_theta(K_theta) {}
 
@@ -220,8 +195,7 @@ struct SetJointImpedance
 };
 
 struct SetCartesianImpedance
-    : public CommandBase<SetCartesianImpedance,
-                         Function::kSetCartesianImpedance> {
+    : public CommandBase<SetCartesianImpedance, Function::kSetCartesianImpedance> {
   struct Request : public RequestBase<SetCartesianImpedance> {
     Request(const std::array<double, 6> K_x) : K_x(K_x) {}
 
@@ -229,8 +203,7 @@ struct SetCartesianImpedance
   };
 };
 
-struct SetGuidingMode
-    : public CommandBase<SetGuidingMode, Function::kSetGuidingMode> {
+struct SetGuidingMode : public CommandBase<SetGuidingMode, Function::kSetGuidingMode> {
   struct Request : public RequestBase<SetGuidingMode> {
     Request(const std::array<bool, 6>& guiding_mode, bool nullspace)
         : guiding_mode(guiding_mode), nullspace(nullspace) {}
@@ -270,18 +243,15 @@ struct SetLoad : public CommandBase<SetLoad, Function::kSetLoad> {
 };
 
 struct SetTimeScalingFactor
-    : public CommandBase<SetTimeScalingFactor,
-                         Function::kSetTimeScalingFactor> {
+    : public CommandBase<SetTimeScalingFactor, Function::kSetTimeScalingFactor> {
   struct Request : public RequestBase<SetTimeScalingFactor> {
-    Request(double time_scaling_factor)
-        : time_scaling_factor(time_scaling_factor) {}
+    Request(double time_scaling_factor) : time_scaling_factor(time_scaling_factor) {}
 
     const double time_scaling_factor;
   };
 };
 
 struct AutomaticErrorRecovery
-    : public CommandBase<AutomaticErrorRecovery,
-                         Function::kAutomaticErrorRecovery> {};
+    : public CommandBase<AutomaticErrorRecovery, Function::kAutomaticErrorRecovery> {};
 
 }  // namespace research_interface
