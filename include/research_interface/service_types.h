@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cinttypes>
+#include <cstring>
 #include <type_traits>
 
 namespace research_interface {
@@ -31,15 +32,24 @@ enum class Function : uint32_t {
 };
 
 template <typename T>
-struct RequestBase {
-  RequestBase() : function(T::kFunction) {}
+struct Zero {
+  Zero() {
+    std::memset(this, 0, sizeof(T));
+  }
+};
+
+template <typename T>
+struct RequestBase : Zero<typename T::Request> {
+  RequestBase() : function(T::kFunction) {
+  }
   const Function function;
 };
 
 template <typename T>
-struct ResponseBase {
+struct ResponseBase : Zero<typename T::Response> {
   ResponseBase(typename T::Status status)
-      : function(T::kFunction), status(status) {}
+      : function(T::kFunction), status(status) {
+  }
 
   const Function function;
   const typename T::Status status;
