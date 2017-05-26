@@ -2,7 +2,6 @@
 
 #include <array>
 #include <cinttypes>
-#include <cstring>
 #include <type_traits>
 
 namespace research_interface {
