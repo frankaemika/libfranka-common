@@ -7,6 +7,8 @@
 
 namespace research_interface {
 
+#pragma pack(push, 1)
+
 using Version = uint16_t;
 
 constexpr Version kVersion = 1;
@@ -32,18 +34,13 @@ enum class Function : uint32_t {
 };
 
 template <typename T>
-struct Zero {
-  Zero() { std::memset(this, 0, sizeof(T)); }
-};
-
-template <typename T>
-struct RequestBase : Zero<typename T::Request> {
+struct RequestBase {
   RequestBase() : function(T::kFunction) {}
   const Function function;
 };
 
 template <typename T>
-struct ResponseBase : Zero<typename T::Response> {
+struct ResponseBase {
   ResponseBase(typename T::Status status) : function(T::kFunction), status(status) {}
 
   const Function function;
@@ -253,5 +250,7 @@ struct SetTimeScalingFactor
 
 struct AutomaticErrorRecovery
     : public CommandBase<AutomaticErrorRecovery, Function::kAutomaticErrorRecovery> {};
+
+#pragma pack(pop)
 
 }  // namespace research_interface
