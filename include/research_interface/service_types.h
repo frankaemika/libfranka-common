@@ -6,6 +6,8 @@
 
 namespace research_interface {
 
+#pragma pack(push, 1)
+
 using Version = uint16_t;
 
 constexpr Version kVersion = 1;
@@ -247,5 +249,7 @@ struct SetTimeScalingFactor
 
 struct AutomaticErrorRecovery
     : public CommandBase<AutomaticErrorRecovery, Function::kAutomaticErrorRecovery> {};
+
+#pragma pack(pop)
 
 }  // namespace research_interface
