@@ -5,6 +5,8 @@
 
 namespace research_interface {
 
+#pragma pack(push, 1)
+
 enum class MotionGeneratorMode : uint8_t {
   kIdle,
   kJointPosition,
@@ -61,5 +63,7 @@ struct RobotCommand {
   MotionGeneratorCommand motion;
   ControllerCommand control;
 };
+
+#pragma pack(pop)
 
 }  // namespace research_interface
