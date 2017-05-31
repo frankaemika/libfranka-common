@@ -15,10 +15,8 @@ constexpr uint16_t kCommandPort = 1337;
 
 enum class Function : uint32_t {
   kConnect,
-  kStartMotionGenerator,
-  kStopMotionGenerator,
-  kStartController,
-  kStopController,
+  kMove,
+  kStopMove,
   kGetCartesianLimit,
   kSetControllerMode,
   kSetCollisionBehavior,
@@ -80,8 +78,15 @@ struct Connect : CommandBase<Connect, Function::kConnect> {
   };
 };
 
-struct StartMotionGenerator
-    : public CommandBase<StartMotionGenerator, Function::kStartMotionGenerator> {
+struct Move : public CommandBase<Move, Function::kMove> {
+  enum class ControllerMode : uint32_t {
+    kMotorPD,
+    kJointPosition,
+    kJointImpedance,
+    kCartesianImpedance,
+    kExternalController
+  };
+
   enum class MotionGeneratorMode : uint32_t {
     kJointPosition,
     kJointVelocity,
@@ -91,19 +96,32 @@ struct StartMotionGenerator
 
   enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted, kMotionStarted };
 
-  struct Request : public RequestBase<StartMotionGenerator> {
-    Request(MotionGeneratorMode mode) : mode(mode) {}
+  struct Deviation {
+    Deviation(double translation, double rotation, double elbow)
+        : translation(translation), rotation(rotation), elbow(elbow) {}
+    const double translation;
+    const double rotation;
+    const double elbow;
+  };
 
-    const MotionGeneratorMode mode;
+  struct Request : public RequestBase<Move> {
+    Request(ControllerMode controller_mode,
+            MotionGeneratorMode motion_generator_mode,
+            const Deviation& maximum_path_deviation,
+            const Deviation& maximum_goal_pose_deviation)
+        : controller_mode(controller_mode),
+          motion_generator_mode(motion_generator_mode),
+          maximum_path_deviation(maximum_path_deviation),
+          maximum_goal_pose_deviation(maximum_goal_pose_deviation) {}
+
+    const ControllerMode controller_mode;
+    const MotionGeneratorMode motion_generator_mode;
+    const Deviation maximum_path_deviation;
+    const Deviation maximum_goal_pose_deviation;
   };
 };
 
-struct StopMotionGenerator
-    : public CommandBase<StopMotionGenerator, Function::kStopMotionGenerator> {};
-
-struct StartController : public CommandBase<StartController, Function::kStartController> {};
-
-struct StopController : public CommandBase<StopController, Function::kStopController> {};
+struct StopMove : public CommandBase<StopMove, Function::kStopMove> {};
 
 struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Function::kGetCartesianLimit> {
   struct Request : public RequestBase<GetCartesianLimit> {
@@ -138,7 +156,8 @@ struct SetControllerMode : public CommandBase<SetControllerMode, Function::kSetC
     kMotorPD,
     kJointPosition,
     kJointImpedance,
-    kCartesianImpedance
+    kCartesianImpedance,
+    kExternalController
   };
 
   struct Request : public RequestBase<SetControllerMode> {

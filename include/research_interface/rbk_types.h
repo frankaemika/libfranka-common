@@ -8,7 +8,7 @@ namespace research_interface {
 #pragma pack(push, 1)
 
 enum class MotionGeneratorMode : uint8_t {
-  kIdle = 0,
+  kIdle,
   kJointPosition,
   kJointVelocity,
   kCartesianPosition,
@@ -16,7 +16,7 @@ enum class MotionGeneratorMode : uint8_t {
 };
 
 enum class ControllerMode : uint8_t {
-  kMotorPD = 0,
+  kMotorPD,
   kJointPosition,
   kJointImpedance,
   kCartesianImpedance,
