@@ -4,6 +4,7 @@
 #include <cinttypes>
 
 namespace research_interface {
+namespace robot {
 
 #pragma pack(push, 1)
 
@@ -66,4 +67,5 @@ struct RobotCommand {
 
 #pragma pack(pop)
 
+}  // namespace robot
 }  // namespace research_interface
