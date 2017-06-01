@@ -8,23 +8,13 @@ template <typename T>
 struct CommandTraits {};
 
 template <>
-struct CommandTraits<StartMotionGenerator> {
-  static constexpr const char* kName = "Start Motion Generator";
+struct CommandTraits<Move> {
+  static constexpr const char* kName = "Move";
 };
 
 template <>
-struct CommandTraits<StopMotionGenerator> {
-  static constexpr const char* kName = "Stop Motion Generator";
-};
-
-template <>
-struct CommandTraits<StartController> {
-  static constexpr const char* kName = "Start Controller";
-};
-
-template <>
-struct CommandTraits<StopController> {
-  static constexpr const char* kName = "Stop Controller";
+struct CommandTraits<StopMove> {
+  static constexpr const char* kName = "Stop Move";
 };
 
 template <>
