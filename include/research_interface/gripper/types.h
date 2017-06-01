@@ -3,7 +3,8 @@
 #include <cinttypes>
 #include <type_traits>
 
-namespace gripper_interface {
+namespace research_interface {
+namespace gripper {
 
 #pragma pack(push, 1)
 
@@ -106,4 +107,5 @@ struct GripperState {
 
 #pragma pack(pop)
 
-}  // namespace gripper_interface
+}  // namespace gripper
+}  // namespace research_interface
