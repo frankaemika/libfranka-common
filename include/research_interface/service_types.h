@@ -97,7 +97,7 @@ struct Move : public CommandBase<Move, Function::kMove> {
   enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted, kMotionStarted };
 
   struct Deviation {
-    Deviation(double translation, double rotation, double elbow)
+    constexpr Deviation(double translation, double rotation, double elbow)
         : translation(translation), rotation(rotation), elbow(elbow) {}
     const double translation;
     const double rotation;
