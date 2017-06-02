@@ -5,6 +5,7 @@
 #include <type_traits>
 
 namespace research_interface {
+namespace robot {
 
 #pragma pack(push, 1)
 
@@ -271,4 +272,5 @@ struct AutomaticErrorRecovery
 
 #pragma pack(pop)
 
+}  // namespace robot
 }  // namespace research_interface

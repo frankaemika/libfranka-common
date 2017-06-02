@@ -1,8 +1,9 @@
 #pragma once
 
-#include <research_interface/service_types.h>
+#include <research_interface/robot/service_types.h>
 
 namespace research_interface {
+namespace robot {
 
 template <typename T>
 struct CommandTraits {};
@@ -72,4 +73,5 @@ struct CommandTraits<AutomaticErrorRecovery> {
   static constexpr const char* kName = "Automatic Error Recovery";
 };
 
+}  // namespace robot
 }  // namespace research_interface
