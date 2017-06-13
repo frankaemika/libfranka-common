@@ -27,7 +27,9 @@ enum class ControllerMode : uint8_t {
 struct RobotState {
   uint32_t message_id;
   std::array<double, 16> O_T_EE;
+  std::array<double, 16> O_T_EE_d;
   std::array<double, 2> elbow;
+  std::array<double, 2> elbow_d;
   std::array<double, 7> tau_J;
   std::array<double, 7> dtau_J;
   std::array<double, 7> q;
