@@ -95,10 +95,7 @@ struct Release : public CommandBase<Release, Function::kRelease> {
   };
 };
 
-enum class Command : uint16_t { kNone, kHoming, kGrasp, kMove, kStop, kRelease };
-
 struct GripperState {
-  Command command;
   double width;
   double max_width;
   bool is_grasped;
