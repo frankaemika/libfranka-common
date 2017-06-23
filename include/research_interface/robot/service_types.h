@@ -292,9 +292,9 @@ struct LoadModelLibrary
 
   struct Response : public ResponseBase<LoadModelLibrary> {
     Response() : ResponseBase(Status::kRejected), size(0) {}
-    Response(uint64_t size) : ResponseBase(Status::kSuccess), size(size) {}
+    Response(uint32_t size) : ResponseBase(Status::kSuccess), size(size) {}
 
-    const uint64_t size;
+    const uint32_t size;
   };
 };
 
