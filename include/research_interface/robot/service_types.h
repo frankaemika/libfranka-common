@@ -271,27 +271,23 @@ struct SetTimeScalingFactor
 struct AutomaticErrorRecovery
     : public CommandBase<AutomaticErrorRecovery, Function::kAutomaticErrorRecovery> {};
 
-struct LoadModelLibrary
-    : public CommandBase<LoadModelLibrary, Function::kLoadModelLibrary> {
-  enum class Status : uint32_t { kSuccess, kRejected };
+struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Function::kLoadModelLibrary> {
+  enum class Status : uint32_t { kSuccess, kError };
 
-  enum class Architecture : uint8_t {
-    kX64
-  };
+  enum class Architecture : uint8_t { kX64 };
 
-  enum class Platform : uint8_t {
-    kLinux
-  };
+  enum class Platform : uint8_t { kLinux };
 
   struct Request : public RequestBase<LoadModelLibrary> {
-    Request(Architecture architecture, Platform platform) : architecture(architecture), platform(platform) {}
+    Request(Architecture architecture, Platform platform)
+        : architecture(architecture), platform(platform) {}
 
     const Architecture architecture;
     const Platform platform;
   };
 
   struct Response : public ResponseBase<LoadModelLibrary> {
-    Response() : ResponseBase(Status::kRejected), size(0) {}
+    Response() : ResponseBase(Status::kError), size(0) {}
     Response(uint32_t size) : ResponseBase(Status::kSuccess), size(size) {}
 
     const uint32_t size;
