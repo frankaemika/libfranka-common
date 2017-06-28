@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <cinttypes>
+#include <cstdint>
 #include <type_traits>
 
 namespace research_interface {
