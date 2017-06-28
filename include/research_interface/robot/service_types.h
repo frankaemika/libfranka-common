@@ -287,8 +287,7 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Function::kLoadMo
   };
 
   struct Response : public ResponseBase<LoadModelLibrary> {
-    Response() : ResponseBase(Status::kError), size(0) {}
-    Response(uint32_t size) : ResponseBase(Status::kSuccess), size(size) {}
+    Response(Status status, uint32_t size) : ResponseBase(status), size(size) {}
 
     const uint32_t size;
   };
