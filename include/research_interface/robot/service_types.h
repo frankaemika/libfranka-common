@@ -276,14 +276,14 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Function::kLoadMo
 
   enum class Architecture : uint8_t { kX64 };
 
-  enum class Platform : uint8_t { kLinux };
+  enum class System : uint8_t { kLinux };
 
   struct Request : public RequestBase<LoadModelLibrary> {
-    Request(Architecture architecture, Platform platform)
-        : architecture(architecture), platform(platform) {}
+    Request(Architecture architecture, System system)
+        : architecture(architecture), system(system) {}
 
     const Architecture architecture;
-    const Platform platform;
+    const System system;
   };
 
   struct Response : public ResponseBase<LoadModelLibrary> {
