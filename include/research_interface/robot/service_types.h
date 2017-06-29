@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <cinttypes>
+#include <cstdint>
 #include <type_traits>
 
 namespace research_interface {
@@ -28,7 +28,8 @@ enum class Function : uint32_t {
   kSetFToEE,
   kSetLoad,
   kSetTimeScalingFactor,
-  kAutomaticErrorRecovery
+  kAutomaticErrorRecovery,
+  kLoadModelLibrary
 };
 
 template <typename T>
@@ -269,6 +270,28 @@ struct SetTimeScalingFactor
 
 struct AutomaticErrorRecovery
     : public CommandBase<AutomaticErrorRecovery, Function::kAutomaticErrorRecovery> {};
+
+struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Function::kLoadModelLibrary> {
+  enum class Status : uint32_t { kSuccess, kError };
+
+  enum class Architecture : uint8_t { kX64 };
+
+  enum class System : uint8_t { kLinux };
+
+  struct Request : public RequestBase<LoadModelLibrary> {
+    Request(Architecture architecture, System system)
+        : architecture(architecture), system(system) {}
+
+    const Architecture architecture;
+    const System system;
+  };
+
+  struct Response : public ResponseBase<LoadModelLibrary> {
+    Response(Status status, uint32_t size) : ResponseBase(status), size(size) {}
+
+    const uint32_t size;
+  };
+};
 
 #pragma pack(pop)
 

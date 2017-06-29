@@ -1,7 +1,7 @@
 #pragma once
 
 #include <array>
-#include <cinttypes>
+#include <cstdint>
 
 namespace research_interface {
 namespace robot {
