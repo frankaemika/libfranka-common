@@ -96,6 +96,7 @@ struct Release : public CommandBase<Release, Function::kRelease> {
 };
 
 struct GripperState {
+  uint32_t message_id;
   double width;
   double max_width;
   bool is_grasped;
