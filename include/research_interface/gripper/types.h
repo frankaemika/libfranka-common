@@ -86,15 +86,6 @@ struct Move : public CommandBase<Move, Function::kMove> {
 
 struct Stop : public CommandBase<Stop, Function::kStop> {};
 
-struct Release : public CommandBase<Release, Function::kRelease> {
-  struct Request : public RequestBase<Release> {
-    Request(double width, double speed) : width(width), speed(speed) {}
-
-    const double width;
-    const double speed;
-  };
-};
-
 struct GripperState {
   uint32_t message_id;
   double width;
