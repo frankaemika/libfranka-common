@@ -13,7 +13,7 @@ using Version = uint16_t;
 constexpr Version kVersion = 1;
 constexpr uint16_t kCommandPort = 1338;
 
-enum class Function : uint16_t { kConnect, kHoming, kGrasp, kMove, kStop, kRelease };
+enum class Function : uint16_t { kConnect, kHoming, kGrasp, kMove, kStop };
 
 template <typename T>
 struct RequestBase {
