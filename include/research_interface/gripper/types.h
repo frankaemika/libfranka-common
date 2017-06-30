@@ -13,7 +13,7 @@ using Version = uint16_t;
 constexpr Version kVersion = 1;
 constexpr uint16_t kCommandPort = 1338;
 
-enum class Function : uint16_t { kConnect, kHoming, kGrasp, kMove, kStop, kRelease };
+enum class Function : uint16_t { kConnect, kHoming, kGrasp, kMove, kStop };
 
 template <typename T>
 struct RequestBase {
@@ -85,15 +85,6 @@ struct Move : public CommandBase<Move, Function::kMove> {
 };
 
 struct Stop : public CommandBase<Stop, Function::kStop> {};
-
-struct Release : public CommandBase<Release, Function::kRelease> {
-  struct Request : public RequestBase<Release> {
-    Request(double width, double speed) : width(width), speed(speed) {}
-
-    const double width;
-    const double speed;
-  };
-};
 
 struct GripperState {
   uint32_t message_id;
