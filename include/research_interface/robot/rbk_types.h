@@ -24,6 +24,20 @@ enum class ControllerMode : uint8_t {
   kExternalController
 };
 
+enum class RobotMode : uint8_t {
+  kEmergency,
+  kStartup,
+  kIdle,
+  kMove,
+  kForce,
+  kMoveForce,
+  kGuiding,
+  kReflex,
+  kAutomaticErrorRecovery,
+  kEmergency2,
+  kRcuInputError
+};
+
 struct RobotState {
   uint32_t message_id;
   std::array<double, 16> O_T_EE;
@@ -46,6 +60,7 @@ struct RobotState {
   ControllerMode controller_mode;
   std::array<bool, 24> errors;
   std::array<bool, 24> reflex_reason;
+  RobotMode robot_mode;
 };
 
 struct MotionGeneratorCommand {
