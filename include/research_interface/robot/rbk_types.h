@@ -34,7 +34,8 @@ enum class RobotMode : uint8_t {
   kReflex,
   kAutomaticErrorRecovery,
   kEmergency2,
-  kRcuInputError
+  kRcuInputError,
+  kMoveFci
 };
 
 struct RobotState {
@@ -58,8 +59,8 @@ struct RobotState {
   std::array<double, 6> K_F_ext_hat_K;
   MotionGeneratorMode motion_generator_mode;
   ControllerMode controller_mode;
-  std::array<bool, 25> errors;
-  std::array<bool, 25> reflex_reason;
+  std::array<bool, 27> errors;
+  std::array<bool, 27> reflex_reason;
   RobotMode robot_mode;
 };
 
