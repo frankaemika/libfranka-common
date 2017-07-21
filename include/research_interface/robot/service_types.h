@@ -71,8 +71,7 @@ struct RequestBase {
 
 template <typename T>
 struct ResponseBase {
-  ResponseBase(typename T::Status status, CommandStatusReason reason)
-      : function(T::kFunction), status(status), reason(reason) {}
+  ResponseBase(typename T::Status status, CommandStatusReason reason) : function(T::kFunction), status(status), reason(reason) {}
 
   const Function function;
   const typename T::Status status;
@@ -107,9 +106,7 @@ struct Connect : CommandBase<Connect, Function::kConnect> {
   };
 
   struct Response : public ResponseBase<Connect> {
-    Response(Status status)
-        : ResponseBase(status, research_interface::robot::CommandStatusReason::kNoReason),
-          version(kVersion) {}
+    Response(Status status, CommandStatusReason reason) : ResponseBase(status, reason), version(kVersion) {}
 
     const Version version;
   };
@@ -168,8 +165,7 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Function::kGetC
   };
 
   struct Response : public ResponseBase<GetCartesianLimit> {
-    Response(Status status, CommandStatusReason reason)
-        : Response(status, reason, {}, {}, {}, {}) {}
+    Response(Status status, CommandStatusReason reason) : Response(status, reason, {}, {}, {}, {}) {}
 
     Response(Status status,
              CommandStatusReason reason,
@@ -324,8 +320,7 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Function::kLoadMo
   };
 
   struct Response : public ResponseBase<LoadModelLibrary> {
-    Response(Status status, CommandStatusReason reason, uint32_t size)
-        : ResponseBase(status, reason), size(size) {}
+    Response(Status status, CommandStatusReason reason, uint32_t size) : ResponseBase(status, reason), size(size) {}
 
     const uint32_t size;
   };
