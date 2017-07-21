@@ -32,37 +32,6 @@ enum class Function : uint32_t {
   kLoadModelLibrary
 };
 
-enum class CommandStatusReason : uint32_t {
-  kNoReason,
-  kMoveFinished,
-  kCommandApplied,
-  kStopCommandPreempted,
-  kGuidingPreempted,
-  kEmergencyAborted,
-  kReflexAborted,
-  kOutOfRangeRejected,
-  kNotValidFrameRejected,
-  kNotValidElementRejected,
-  kBufferFullRejected,
-  kIdNotValidRejected,
-  kElbowSignInconsistentRejected,
-  kStopGuidingPreempted,
-  kStopForcePreempted,
-  kCommandNotPossibleRejected,
-  kSlowDownFinished,
-  kForceFinished,
-  kNoop,
-  kForceRampDownFinished,
-  kStopFinished,
-  kStopMovePreempted,
-  kRcuInputErrorAborted,
-  kTimeScalingGenerationFinished,
-  kNotValidElbowRejected,
-  kGuidingSlowDownFinished,
-  kNoGoalSpecifiedRejected,
-  kStartAtSingularPoseRejected
-};
-
 template <typename T>
 struct RequestBase {
   RequestBase() : function(T::kFunction) {}
@@ -71,11 +40,10 @@ struct RequestBase {
 
 template <typename T>
 struct ResponseBase {
-  ResponseBase(typename T::Status status, CommandStatusReason reason) : function(T::kFunction), status(status), reason(reason) {}
+  ResponseBase(typename T::Status status) : function(T::kFunction), status(status) {}
 
   const Function function;
   const typename T::Status status;
-  const CommandStatusReason reason;
 
   static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
   static_assert(
@@ -106,7 +74,7 @@ struct Connect : CommandBase<Connect, Function::kConnect> {
   };
 
   struct Response : public ResponseBase<Connect> {
-    Response(Status status, CommandStatusReason reason) : ResponseBase(status, reason), version(kVersion) {}
+    Response(Status status) : ResponseBase(status), version(kVersion) {}
 
     const Version version;
   };
@@ -165,15 +133,14 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Function::kGetC
   };
 
   struct Response : public ResponseBase<GetCartesianLimit> {
-    Response(Status status, CommandStatusReason reason) : Response(status, reason, {}, {}, {}, {}) {}
+    Response(Status status) : Response(status, {}, {}, {}, {}) {}
 
     Response(Status status,
-             CommandStatusReason reason,
              const std::array<double, 3>& object_p_min,
              const std::array<double, 3>& object_p_max,
              const std::array<double, 16>& object_frame,
              bool object_activation)
-        : ResponseBase<GetCartesianLimit>(status, reason),
+        : ResponseBase<GetCartesianLimit>(status),
           object_p_min(object_p_min),
           object_p_max(object_p_max),
           object_frame(object_frame),
@@ -320,7 +287,7 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Function::kLoadMo
   };
 
   struct Response : public ResponseBase<LoadModelLibrary> {
-    Response(Status status, CommandStatusReason reason, uint32_t size) : ResponseBase(status, reason), size(size) {}
+    Response(Status status, uint32_t size) : ResponseBase(status), size(size) {}
 
     const uint32_t size;
   };
