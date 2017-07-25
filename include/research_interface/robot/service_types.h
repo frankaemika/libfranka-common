@@ -93,7 +93,8 @@ struct Move : public CommandBase<Move, Function::kMove> {
     kJointPosition,
     kJointVelocity,
     kCartesianPosition,
-    kCartesianVelocity
+    kCartesianVelocity,
+    kIdle
   };
 
   enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted, kMotionStarted };
@@ -158,8 +159,7 @@ struct SetControllerMode : public CommandBase<SetControllerMode, Function::kSetC
     kMotorPD,
     kJointPosition,
     kJointImpedance,
-    kCartesianImpedance,
-    kExternalController
+    kCartesianImpedance
   };
 
   struct Request : public RequestBase<SetControllerMode> {
