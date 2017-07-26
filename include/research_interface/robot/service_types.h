@@ -44,7 +44,7 @@ template <typename T>
 struct RequestBase {
   RequestBase(uint32_t command_id) : header(T::kCommand, command_id) {}
 
-  const union { const CommandHeader header; };
+  const CommandHeader header;
 };
 
 template <typename T>
@@ -52,7 +52,7 @@ struct ResponseBase {
   ResponseBase(uint32_t command_id, typename T::Status status)
       : header(T::kCommand, command_id), status(status) {}
 
-  const union { const CommandHeader header; };
+  const CommandHeader header;
   const typename T::Status status;
 
   static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
