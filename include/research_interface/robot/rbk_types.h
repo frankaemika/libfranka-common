@@ -28,6 +28,7 @@ enum class RobotMode : uint8_t {
   kOther,
   kIdle,
   kMove,
+  kMoveWithController,
   kGuiding,
   kReflex,
   kUserStopped,
