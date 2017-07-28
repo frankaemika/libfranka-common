@@ -25,17 +25,13 @@ enum class ControllerMode : uint8_t {
 };
 
 enum class RobotMode : uint8_t {
-  kEmergency,
+  kOther,
   kIdle,
   kMove,
-  kForce,
-  kMoveForce,
   kGuiding,
   kReflex,
+  kUserStopped,
   kAutomaticErrorRecovery,
-  kEmergency2,
-  kRcuInputError,
-  kMoveFci
 };
 
 struct RobotState {
