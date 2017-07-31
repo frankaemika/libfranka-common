@@ -36,7 +36,7 @@ enum class RobotMode : uint8_t {
 };
 
 struct RobotState {
-  uint32_t message_id;
+  uint64_t message_id;
   std::array<double, 16> O_T_EE;
   std::array<double, 16> O_T_EE_d;
   std::array<double, 16> EE_T_K;
@@ -77,7 +77,7 @@ struct ControllerCommand {
 };
 
 struct RobotCommand {
-  uint32_t message_id;
+  uint64_t message_id;
   MotionGeneratorCommand motion;
   ControllerCommand control;
 };
