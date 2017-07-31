@@ -47,8 +47,9 @@ struct RobotState {
   std::array<double, 7> tau_J;
   std::array<double, 7> dtau_J;
   std::array<double, 7> q;
-  std::array<double, 7> dq;
   std::array<double, 7> q_d;
+  std::array<double, 7> dq;
+  std::array<double, 7> dq_d;
   std::array<double, 7> joint_contact;
   std::array<double, 6> cartesian_contact;
   std::array<double, 7> joint_collision;
