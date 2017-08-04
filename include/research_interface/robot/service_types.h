@@ -159,6 +159,8 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
           object_p_max(object_p_max),
           object_frame(object_frame),
           object_activation(object_activation) {}
+    Response(uint32_t command_id, Status status)
+        : Response(command_id, status, {}, {}, {}, false) {}
 
     const std::array<double, 3> object_p_min;
     const std::array<double, 3> object_p_max;
@@ -311,6 +313,7 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadMod
   struct Response : public ResponseBase<LoadModelLibrary> {
     Response(uint32_t command_id, Status status, uint32_t size)
         : ResponseBase(command_id, status), size(size) {}
+    Response(uint32_t command_id, Status status) : Response(command_id, status, 0u) {}
 
     const uint32_t size;
   };
