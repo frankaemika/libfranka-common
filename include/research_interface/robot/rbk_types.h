@@ -39,7 +39,11 @@ struct RobotState {
   uint64_t message_id;
   std::array<double, 16> O_T_EE;
   std::array<double, 16> O_T_EE_d;
+  std::array<double, 16> F_T_EE;
   std::array<double, 16> EE_T_K;
+  double m_load;
+  std::array<double, 9> I_load;
+  std::array<double, 3> F_x_Cload;
   std::array<double, 2> elbow;
   std::array<double, 2> elbow_d;
   std::array<double, 7> tau_J;
