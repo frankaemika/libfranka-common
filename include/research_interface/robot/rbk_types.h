@@ -32,7 +32,7 @@ enum class RobotMode : uint8_t {
   kGuiding,
   kReflex,
   kUserStopped,
-  kAutomaticErrorRecovery,
+  kAutomaticErrorRecovery
 };
 
 struct RobotState {
