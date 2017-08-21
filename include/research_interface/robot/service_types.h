@@ -93,8 +93,7 @@ struct Move : public CommandBase<Move, Function::kMove> {
     kJointPosition,
     kJointVelocity,
     kCartesianPosition,
-    kCartesianVelocity,
-    kIdle
+    kCartesianVelocity
   };
 
   enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted, kMotionStarted };
