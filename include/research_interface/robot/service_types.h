@@ -67,6 +67,8 @@ template <typename T, Command C>
 struct CommandBase {
   static constexpr Command kCommand = C;
 
+  CommandBase() = delete;
+
   enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted };
 
   using Header = CommandHeader;
