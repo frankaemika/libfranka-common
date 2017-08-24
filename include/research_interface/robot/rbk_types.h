@@ -34,45 +34,6 @@ enum class RobotMode : uint8_t {
   kAutomaticErrorRecovery
 };
 
-struct Errors {
-  Errors() = delete;
-  enum : size_t {
-    kJointPositionLimitsViolation,
-    kCartesianPositionLimitsViolation,
-    kSelfcollisionAvoidanceViolation,
-    kJointVelocityViolation,
-    kCartesianVelocityViolation,
-    kForceControlSafetyViolation,
-    kJointReflex,
-    kCartesianReflex,
-    kMaxGoalPoseDeviationViolation,
-    kMaxPathPoseDeviationViolation,
-    kCartesianVelocityProfileSafetyViolation,
-    kJointPositionMotionGeneratorStartPoseInvalid,
-    kJointMotionGeneratorPositionLimitsViolation,
-    kJointMotionGeneratorVelocityLimitsViolation,
-    kJointMotionGeneratorVelocityDiscontinuity,
-    kJointMotionGeneratorAccelerationDiscontinuity,
-    kCartesianPositionMotionGeneratorStartPoseInvalid,
-    kCartesianMotionGeneratorElbowLimitViolation,
-    kCartesianMotionGeneratorVelocityLimitsViolation,
-    kCartesianMotionGeneratorVelocityDiscontinuity,
-    kCartesianMotionGeneratorAccelerationDiscontinuity,
-    kCartesianMotionGeneratorElbowSignInconsistent,
-    kCartesianMotionGeneratorStartElbowInvalid,
-    kForceControllerDesiredForceToleranceViolation,
-    kStartElbowSignInconsistent,
-    kCommunicationConstraintsViolation,
-    kPowerLimitViolation,
-    kCartesianMotionGeneratorJointPositionLimitsViolation,
-    kCartesianMotionGeneratorJointVelocityLimitsViolation,
-    kCartesianMotionGeneratorJointVelocityDiscontinuity,
-    kCartesianMotionGeneratorJointAccelerationDiscontinuity,
-    kCartesianPositionMotionGeneratorInvalidFrame,
-    kControllerTorqueDiscontinuity
-  };
-};
-
 struct RobotState {
   uint64_t message_id;
   std::array<double, 16> O_T_EE;
