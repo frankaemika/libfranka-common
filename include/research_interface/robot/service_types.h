@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <cstring>
 #include <type_traits>
 
 namespace research_interface {
@@ -57,6 +58,26 @@ struct ResponseBase {
                 "Status must define kSuccess with value of 0.");
 };
 
+template <typename T>
+struct CommandMessage {
+  CommandHeader header;
+  std::array<uint8_t, sizeof(T)> payload;
+
+  T get() noexcept { return *reinterpret_cast<T*>(payload.data()); }
+
+  void set(const T& instance) noexcept { std::memcpy(payload.data(), &instance, payload.size()); }
+};
+
+template <>
+template <typename T>
+struct CommandMessage<RequestBase<T>> {
+  CommandHeader header;
+
+  RequestBase<T> get() noexcept { return RequestBase<T>(); }
+
+  void set(const RequestBase<T>&) noexcept {}
+};
+
 template <typename T, Command C>
 struct CommandBase {
   static constexpr Command kCommand = C;
@@ -66,6 +87,8 @@ struct CommandBase {
   using Header = CommandHeader;
   using Request = RequestBase<T>;
   using Response = ResponseBase<T>;
+  template <typename P>
+  using Message = CommandMessage<P>;
 };
 
 struct Connect : CommandBase<Connect, Command::kConnect> {
