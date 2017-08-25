@@ -3,8 +3,8 @@
 namespace research_interface {
 namespace robot {
 
-struct Error {
-  Error() = delete;
+struct Errors {
+  Errors() = delete;
   enum Error : size_t {
     kJointPositionLimitsViolation,
     kCartesianPositionLimitsViolation,
