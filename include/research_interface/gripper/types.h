@@ -18,10 +18,12 @@ enum class Command : uint16_t { kConnect, kHoming, kGrasp, kMove, kStop };
 
 struct CommandHeader {
   CommandHeader() = default;
-  CommandHeader(Command command, uint32_t command_id) : command(command), command_id(command_id) {}
+  CommandHeader(Command command, uint32_t command_id, uint32_t size)
+      : command(command), command_id(command_id), size(size) {}
 
   Command command;
   uint32_t command_id;
+  uint32_t size;
 };
 
 template <typename T>

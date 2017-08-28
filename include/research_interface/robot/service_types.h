@@ -35,10 +35,12 @@ enum class Command : uint32_t {
 
 struct CommandHeader {
   CommandHeader() = default;
-  CommandHeader(Command command, uint32_t command_id) : command(command), command_id(command_id) {}
+  CommandHeader(Command command, uint32_t command_id, uint32_t size)
+      : command(command), command_id(command_id), size(size) {}
 
   Command command;
   uint32_t command_id;
+  uint32_t size;
 };
 
 template <typename T>
@@ -317,13 +319,6 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadMod
 
     const Architecture architecture;
     const System system;
-  };
-
-  struct Response : public ResponseBase<LoadModelLibrary> {
-    Response(Status status, uint32_t size) : ResponseBase(status), size(size) {}
-    Response(Status status) : Response(status, 0u) {}
-
-    const uint32_t size;
   };
 };
 
