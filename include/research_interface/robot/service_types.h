@@ -207,14 +207,14 @@ struct SetControllerMode : public CommandBase<SetControllerMode, Command::kSetCo
 struct SetCollisionBehavior
     : public CommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
   struct Request : public RequestBase<SetCollisionBehavior> {
-    Request(const std::array<double, 7> lower_torque_thresholds_acceleration,
-            const std::array<double, 7> upper_torque_thresholds_acceleration,
-            const std::array<double, 7> lower_torque_thresholds_nominal,
-            const std::array<double, 7> upper_torque_thresholds_nominal,
-            const std::array<double, 6> lower_force_thresholds_acceleration,
-            const std::array<double, 6> upper_force_thresholds_acceleration,
-            const std::array<double, 6> lower_force_thresholds_nominal,
-            const std::array<double, 6> upper_force_thresholds_nominal)
+    Request(const std::array<double, 7>& lower_torque_thresholds_acceleration,
+            const std::array<double, 7>& upper_torque_thresholds_acceleration,
+            const std::array<double, 7>& lower_torque_thresholds_nominal,
+            const std::array<double, 7>& upper_torque_thresholds_nominal,
+            const std::array<double, 6>& lower_force_thresholds_acceleration,
+            const std::array<double, 6>& upper_force_thresholds_acceleration,
+            const std::array<double, 6>& lower_force_thresholds_nominal,
+            const std::array<double, 6>& upper_force_thresholds_nominal)
         : lower_torque_thresholds_acceleration(lower_torque_thresholds_acceleration),
           upper_torque_thresholds_acceleration(upper_torque_thresholds_acceleration),
           lower_torque_thresholds_nominal(lower_torque_thresholds_nominal),
@@ -240,7 +240,7 @@ struct SetCollisionBehavior
 
 struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJointImpedance> {
   struct Request : public RequestBase<SetJointImpedance> {
-    Request(const std::array<double, 7> K_theta) : K_theta(K_theta) {}
+    Request(const std::array<double, 7>& K_theta) : K_theta(K_theta) {}
 
     const std::array<double, 7> K_theta;
   };
@@ -249,7 +249,7 @@ struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJo
 struct SetCartesianImpedance
     : public CommandBase<SetCartesianImpedance, Command::kSetCartesianImpedance> {
   struct Request : public RequestBase<SetCartesianImpedance> {
-    Request(const std::array<double, 6> K_x) : K_x(K_x) {}
+    Request(const std::array<double, 6>& K_x) : K_x(K_x) {}
 
     const std::array<double, 6> K_x;
   };
