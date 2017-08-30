@@ -60,26 +60,32 @@ struct ResponseBase {
 
 template <typename T>
 struct CommandMessage {
+  CommandMessage() = default;
+  CommandMessage(const CommandHeader& header, const T& instance) : header(header) {
+    std::memcpy(payload.data(), &instance, payload.size());
+  }
+
+  T getInstance() const noexcept { return *reinterpret_cast<const T*>(payload.data()); }
+
   CommandHeader header;
   std::array<uint8_t, sizeof(T)> payload;
-
-  T get() noexcept { return *reinterpret_cast<T*>(payload.data()); }
-
-  void set(const T& instance) noexcept { std::memcpy(payload.data(), &instance, payload.size()); }
 };
 
 template <>
 template <typename T>
 struct CommandMessage<RequestBase<T>> {
+  CommandMessage() = default;
+  CommandMessage(const CommandHeader& header, const RequestBase<T>&) : header(header) {}
+
+  RequestBase<T> getInstance() const noexcept { return RequestBase<T>(); }
+
   CommandHeader header;
-
-  RequestBase<T> get() noexcept { return RequestBase<T>(); }
-
-  void set(const RequestBase<T>&) noexcept {}
 };
 
 template <typename T, Command C>
 struct CommandBase {
+  CommandBase() = delete;
+
   static constexpr Command kCommand = C;
 
   enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted };
