@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstring>
 #include <type_traits>
 
 namespace research_interface {
@@ -24,17 +25,12 @@ struct CommandHeader {
 };
 
 template <typename T>
-struct RequestBase {
-  RequestBase(uint32_t command_id) : header(T::kCommand, command_id) {}
-  const CommandHeader header;
-};
+struct RequestBase {};
 
 template <typename T>
 struct ResponseBase {
-  ResponseBase(uint32_t command_id, typename T::Status status)
-      : header(T::kCommand, command_id), status(status) {}
+  ResponseBase(typename T::Status status) : status(status) {}
 
-  const CommandHeader header;
   const typename T::Status status;
 
   static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
@@ -45,33 +41,57 @@ struct ResponseBase {
                 "Status must define kSuccess with value of 0.");
 };
 
+template <typename T>
+struct CommandMessage {
+  CommandMessage() = default;
+  CommandMessage(const CommandHeader& header, const T& instance) : header(header) {
+    std::memcpy(payload.data(), &instance, payload.size());
+  }
+
+  T getInstance() const noexcept { return *reinterpret_cast<const T*>(payload.data()); }
+
+  CommandHeader header;
+  std::array<uint8_t, sizeof(T)> payload;
+};
+
+template <>
+template <typename T>
+struct CommandMessage<RequestBase<T>> {
+  CommandMessage() = default;
+  CommandMessage(const CommandHeader& header, const RequestBase<T>&) : header(header) {}
+
+  RequestBase<T> getInstance() const noexcept { return RequestBase<T>(); }
+
+  CommandHeader header;
+};
+
 template <typename T, Command C>
 struct CommandBase {
-  static constexpr Command kCommand = C;
-
   CommandBase() = delete;
+
+  static constexpr Command kCommand = C;
 
   enum class Status : uint16_t { kSuccess, kFail, kUnsuccessful };
 
   using Header = CommandHeader;
   using Request = RequestBase<T>;
   using Response = ResponseBase<T>;
+  template <typename P>
+  using Message = CommandMessage<P>;
 };
 
 struct Connect : CommandBase<Connect, Command::kConnect> {
   enum class Status : uint16_t { kSuccess, kIncompatibleLibraryVersion };
 
   struct Request : public RequestBase<Connect> {
-    Request(uint32_t command_id, uint16_t udp_port)
-        : RequestBase(command_id), version(kVersion), udp_port(udp_port) {}
+    Request(uint16_t udp_port) : version(kVersion), udp_port(udp_port) {}
 
     const Version version;
     const uint16_t udp_port;
   };
 
   struct Response : public ResponseBase<Connect> {
-    Response(uint32_t command_id, Status status)
-        : ResponseBase(command_id, status), version(kVersion) {}
+    Response(Status status) : ResponseBase(status), version(kVersion) {}
 
     const Version version;
   };
@@ -81,8 +101,7 @@ struct Homing : public CommandBase<Homing, Command::kHoming> {};
 
 struct Grasp : public CommandBase<Grasp, Command::kGrasp> {
   struct Request : public RequestBase<Grasp> {
-    Request(uint32_t command_id, double width, double speed, double force)
-        : RequestBase(command_id), width(width), speed(speed), force(force) {}
+    Request(double width, double speed, double force) : width(width), speed(speed), force(force) {}
 
     const double width;
     const double speed;
@@ -92,8 +111,7 @@ struct Grasp : public CommandBase<Grasp, Command::kGrasp> {
 
 struct Move : public CommandBase<Move, Command::kMove> {
   struct Request : public RequestBase<Move> {
-    Request(uint32_t command_id, double width, double speed)
-        : RequestBase(command_id), width(width), speed(speed) {}
+    Request(double width, double speed) : width(width), speed(speed) {}
 
     const double width;
     const double speed;
