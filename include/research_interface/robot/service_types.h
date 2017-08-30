@@ -2,6 +2,7 @@
 
 #include <array>
 #include <cstdint>
+#include <cstring>
 #include <type_traits>
 
 namespace research_interface {
@@ -41,18 +42,12 @@ struct CommandHeader {
 };
 
 template <typename T>
-struct RequestBase {
-  RequestBase(uint32_t command_id) : header(T::kCommand, command_id) {}
-
-  const CommandHeader header;
-};
+struct RequestBase {};
 
 template <typename T>
 struct ResponseBase {
-  ResponseBase(uint32_t command_id, typename T::Status status)
-      : header(T::kCommand, command_id), status(status) {}
+  ResponseBase(typename T::Status status) : status(status) {}
 
-  const CommandHeader header;
   const typename T::Status status;
 
   static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
@@ -63,8 +58,34 @@ struct ResponseBase {
                 "Status must define kSuccess with value of 0.");
 };
 
+template <typename T>
+struct CommandMessage {
+  CommandMessage() = default;
+  CommandMessage(const CommandHeader& header, const T& instance) : header(header) {
+    std::memcpy(payload.data(), &instance, payload.size());
+  }
+
+  T getInstance() const noexcept { return *reinterpret_cast<const T*>(payload.data()); }
+
+  CommandHeader header;
+  std::array<uint8_t, sizeof(T)> payload;
+};
+
+template <>
+template <typename T>
+struct CommandMessage<RequestBase<T>> {
+  CommandMessage() = default;
+  CommandMessage(const CommandHeader& header, const RequestBase<T>&) : header(header) {}
+
+  RequestBase<T> getInstance() const noexcept { return RequestBase<T>(); }
+
+  CommandHeader header;
+};
+
 template <typename T, Command C>
 struct CommandBase {
+  CommandBase() = delete;
+
   static constexpr Command kCommand = C;
 
   enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted };
@@ -72,22 +93,22 @@ struct CommandBase {
   using Header = CommandHeader;
   using Request = RequestBase<T>;
   using Response = ResponseBase<T>;
+  template <typename P>
+  using Message = CommandMessage<P>;
 };
 
 struct Connect : CommandBase<Connect, Command::kConnect> {
   enum class Status : uint32_t { kSuccess, kIncompatibleLibraryVersion };
 
   struct Request : public RequestBase<Connect> {
-    Request(uint32_t command_id, uint16_t udp_port)
-        : RequestBase(command_id), version(kVersion), udp_port(udp_port) {}
+    Request(uint16_t udp_port) : version(kVersion), udp_port(udp_port) {}
 
     const Version version;
     const uint16_t udp_port;
   };
 
   struct Response : public ResponseBase<Connect> {
-    Response(uint32_t command_id, Status status)
-        : ResponseBase(command_id, status), version(kVersion) {}
+    Response(Status status) : ResponseBase(status), version(kVersion) {}
 
     const Version version;
   };
@@ -120,13 +141,11 @@ struct Move : public CommandBase<Move, Command::kMove> {
   };
 
   struct Request : public RequestBase<Move> {
-    Request(uint32_t command_id,
-            ControllerMode controller_mode,
+    Request(ControllerMode controller_mode,
             MotionGeneratorMode motion_generator_mode,
             const Deviation& maximum_path_deviation,
             const Deviation& maximum_goal_pose_deviation)
-        : RequestBase(command_id),
-          controller_mode(controller_mode),
+        : controller_mode(controller_mode),
           motion_generator_mode(motion_generator_mode),
           maximum_path_deviation(maximum_path_deviation),
           maximum_goal_pose_deviation(maximum_goal_pose_deviation) {}
@@ -142,25 +161,23 @@ struct StopMove : public CommandBase<StopMove, Command::kStopMove> {};
 
 struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCartesianLimit> {
   struct Request : public RequestBase<GetCartesianLimit> {
-    Request(uint32_t command_id, int32_t id) : RequestBase(command_id), id(id) {}
+    Request(int32_t id) : id(id) {}
 
     const int32_t id;
   };
 
   struct Response : public ResponseBase<GetCartesianLimit> {
-    Response(uint32_t command_id,
-             Status status,
+    Response(Status status,
              const std::array<double, 3>& object_p_min,
              const std::array<double, 3>& object_p_max,
              const std::array<double, 16>& object_frame,
              bool object_activation)
-        : ResponseBase(command_id, status),
+        : ResponseBase(status),
           object_p_min(object_p_min),
           object_p_max(object_p_max),
           object_frame(object_frame),
           object_activation(object_activation) {}
-    Response(uint32_t command_id, Status status)
-        : Response(command_id, status, {}, {}, {}, false) {}
+    Response(Status status) : Response(status, {}, {}, {}, false) {}
 
     const std::array<double, 3> object_p_min;
     const std::array<double, 3> object_p_max;
@@ -179,7 +196,7 @@ struct SetControllerMode : public CommandBase<SetControllerMode, Command::kSetCo
   };
 
   struct Request : public RequestBase<SetControllerMode> {
-    Request(uint32_t command_id, ControllerMode mode) : RequestBase(command_id), mode(mode) {}
+    Request(ControllerMode mode) : mode(mode) {}
 
     const ControllerMode mode;
   };
@@ -188,8 +205,7 @@ struct SetControllerMode : public CommandBase<SetControllerMode, Command::kSetCo
 struct SetCollisionBehavior
     : public CommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
   struct Request : public RequestBase<SetCollisionBehavior> {
-    Request(uint32_t command_id,
-            const std::array<double, 7> lower_torque_thresholds_acceleration,
+    Request(const std::array<double, 7> lower_torque_thresholds_acceleration,
             const std::array<double, 7> upper_torque_thresholds_acceleration,
             const std::array<double, 7> lower_torque_thresholds_nominal,
             const std::array<double, 7> upper_torque_thresholds_nominal,
@@ -197,8 +213,7 @@ struct SetCollisionBehavior
             const std::array<double, 6> upper_force_thresholds_acceleration,
             const std::array<double, 6> lower_force_thresholds_nominal,
             const std::array<double, 6> upper_force_thresholds_nominal)
-        : RequestBase(command_id),
-          lower_torque_thresholds_acceleration(lower_torque_thresholds_acceleration),
+        : lower_torque_thresholds_acceleration(lower_torque_thresholds_acceleration),
           upper_torque_thresholds_acceleration(upper_torque_thresholds_acceleration),
           lower_torque_thresholds_nominal(lower_torque_thresholds_nominal),
           upper_torque_thresholds_nominal(upper_torque_thresholds_nominal),
@@ -223,8 +238,7 @@ struct SetCollisionBehavior
 
 struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJointImpedance> {
   struct Request : public RequestBase<SetJointImpedance> {
-    Request(uint32_t command_id, const std::array<double, 7> K_theta)
-        : RequestBase(command_id), K_theta(K_theta) {}
+    Request(const std::array<double, 7> K_theta) : K_theta(K_theta) {}
 
     const std::array<double, 7> K_theta;
   };
@@ -233,8 +247,7 @@ struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJo
 struct SetCartesianImpedance
     : public CommandBase<SetCartesianImpedance, Command::kSetCartesianImpedance> {
   struct Request : public RequestBase<SetCartesianImpedance> {
-    Request(uint32_t command_id, const std::array<double, 6> K_x)
-        : RequestBase(command_id), K_x(K_x) {}
+    Request(const std::array<double, 6> K_x) : K_x(K_x) {}
 
     const std::array<double, 6> K_x;
   };
@@ -242,8 +255,8 @@ struct SetCartesianImpedance
 
 struct SetGuidingMode : public CommandBase<SetGuidingMode, Command::kSetGuidingMode> {
   struct Request : public RequestBase<SetGuidingMode> {
-    Request(uint32_t command_id, const std::array<bool, 6>& guiding_mode, bool nullspace)
-        : RequestBase(command_id), guiding_mode(guiding_mode), nullspace(nullspace) {}
+    Request(const std::array<bool, 6>& guiding_mode, bool nullspace)
+        : guiding_mode(guiding_mode), nullspace(nullspace) {}
 
     const std::array<bool, 6> guiding_mode;
     const bool nullspace;
@@ -252,8 +265,7 @@ struct SetGuidingMode : public CommandBase<SetGuidingMode, Command::kSetGuidingM
 
 struct SetEEToK : public CommandBase<SetEEToK, Command::kSetEEToK> {
   struct Request : public RequestBase<SetEEToK> {
-    Request(uint32_t command_id, const std::array<double, 16>& EE_T_K)
-        : RequestBase(command_id), EE_T_K(EE_T_K) {}
+    Request(const std::array<double, 16>& EE_T_K) : EE_T_K(EE_T_K) {}
 
     const std::array<double, 16> EE_T_K;
   };
@@ -261,8 +273,7 @@ struct SetEEToK : public CommandBase<SetEEToK, Command::kSetEEToK> {
 
 struct SetFToEE : public CommandBase<SetFToEE, Command::kSetFToEE> {
   struct Request : public RequestBase<SetFToEE> {
-    Request(uint32_t command_id, const std::array<double, 16>& F_T_EE)
-        : RequestBase(command_id), F_T_EE(F_T_EE) {}
+    Request(const std::array<double, 16>& F_T_EE) : F_T_EE(F_T_EE) {}
 
     const std::array<double, 16> F_T_EE;
   };
@@ -270,11 +281,10 @@ struct SetFToEE : public CommandBase<SetFToEE, Command::kSetFToEE> {
 
 struct SetLoad : public CommandBase<SetLoad, Command::kSetLoad> {
   struct Request : public RequestBase<SetLoad> {
-    Request(uint32_t command_id,
-            double m_load,
+    Request(double m_load,
             const std::array<double, 3>& F_x_Cload,
             const std::array<double, 9>& I_load)
-        : RequestBase(command_id), m_load(m_load), F_x_Cload(F_x_Cload), I_load(I_load) {}
+        : m_load(m_load), F_x_Cload(F_x_Cload), I_load(I_load) {}
 
     const double m_load;
     const std::array<double, 3> F_x_Cload;
@@ -285,8 +295,7 @@ struct SetLoad : public CommandBase<SetLoad, Command::kSetLoad> {
 struct SetTimeScalingFactor
     : public CommandBase<SetTimeScalingFactor, Command::kSetTimeScalingFactor> {
   struct Request : public RequestBase<SetTimeScalingFactor> {
-    Request(uint32_t command_id, double time_scaling_factor)
-        : RequestBase(command_id), time_scaling_factor(time_scaling_factor) {}
+    Request(double time_scaling_factor) : time_scaling_factor(time_scaling_factor) {}
 
     const double time_scaling_factor;
   };
@@ -303,17 +312,16 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadMod
   enum class System : uint8_t { kLinux };
 
   struct Request : public RequestBase<LoadModelLibrary> {
-    Request(uint32_t command_id, Architecture architecture, System system)
-        : RequestBase(command_id), architecture(architecture), system(system) {}
+    Request(Architecture architecture, System system)
+        : architecture(architecture), system(system) {}
 
     const Architecture architecture;
     const System system;
   };
 
   struct Response : public ResponseBase<LoadModelLibrary> {
-    Response(uint32_t command_id, Status status, uint32_t size)
-        : ResponseBase(command_id, status), size(size) {}
-    Response(uint32_t command_id, Status status) : Response(command_id, status, 0u) {}
+    Response(Status status, uint32_t size) : ResponseBase(status), size(size) {}
+    Response(Status status) : Response(status, 0u) {}
 
     const uint32_t size;
   };
