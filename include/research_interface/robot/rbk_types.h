@@ -63,7 +63,7 @@ struct RobotState {
   std::array<bool, 33> errors;
   std::array<bool, 33> reflex_reason;
   RobotMode robot_mode;
-  double packet_drop_rate;
+  uint8_t packet_drop_rate;
 };
 
 struct MotionGeneratorCommand {
