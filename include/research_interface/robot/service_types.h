@@ -28,7 +28,6 @@ enum class Command : uint32_t {
   kSetEEToK,
   kSetFToEE,
   kSetLoad,
-  kSetTimeScalingFactor,
   kAutomaticErrorRecovery,
   kLoadModelLibrary
 };
@@ -285,15 +284,6 @@ struct SetLoad : public CommandBase<SetLoad, Command::kSetLoad> {
     const double m_load;
     const std::array<double, 3> F_x_Cload;
     const std::array<double, 9> I_load;
-  };
-};
-
-struct SetTimeScalingFactor
-    : public CommandBase<SetTimeScalingFactor, Command::kSetTimeScalingFactor> {
-  struct Request : public RequestBase<SetTimeScalingFactor> {
-    Request(double time_scaling_factor) : time_scaling_factor(time_scaling_factor) {}
-
-    const double time_scaling_factor;
   };
 };
 

@@ -64,11 +64,6 @@ struct CommandTraits<SetLoad> {
 };
 
 template <>
-struct CommandTraits<SetTimeScalingFactor> {
-  static constexpr const char* kName = "Set Time Scaling Factor";
-};
-
-template <>
 struct CommandTraits<AutomaticErrorRecovery> {
   static constexpr const char* kName = "Automatic Error Recovery";
 };
