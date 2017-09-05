@@ -16,11 +16,7 @@ enum class MotionGeneratorMode : uint8_t {
   kCartesianVelocity
 };
 
-enum class ControllerMode : uint8_t {
-  kJointImpedance,
-  kCartesianImpedance,
-  kExternalController
-};
+enum class ControllerMode : uint8_t { kJointImpedance, kCartesianImpedance, kExternalController };
 
 enum class RobotMode : uint8_t {
   kEmergency,
