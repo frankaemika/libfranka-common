@@ -116,8 +116,6 @@ struct Connect : CommandBase<Connect, Command::kConnect> {
 
 struct Move : public CommandBase<Move, Command::kMove> {
   enum class ControllerMode : uint32_t {
-    kMotorPD,
-    kJointPosition,
     kJointImpedance,
     kCartesianImpedance,
     kExternalController
@@ -188,8 +186,6 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
 
 struct SetControllerMode : public CommandBase<SetControllerMode, Command::kSetControllerMode> {
   enum class ControllerMode : uint32_t {
-    kMotorPD,
-    kJointPosition,
     kJointImpedance,
     kCartesianImpedance,
     kExternalController
