@@ -35,10 +35,12 @@ enum class Command : uint32_t {
 
 struct CommandHeader {
   CommandHeader() = default;
-  CommandHeader(Command command, uint32_t command_id) : command(command), command_id(command_id) {}
+  CommandHeader(Command command, uint32_t command_id, uint32_t size)
+      : command(command), command_id(command_id), size(size) {}
 
   Command command;
   uint32_t command_id;
+  uint32_t size;
 };
 
 template <typename T>
@@ -204,14 +206,14 @@ struct SetControllerMode : public CommandBase<SetControllerMode, Command::kSetCo
 struct SetCollisionBehavior
     : public CommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
   struct Request : public RequestBase<SetCollisionBehavior> {
-    Request(const std::array<double, 7> lower_torque_thresholds_acceleration,
-            const std::array<double, 7> upper_torque_thresholds_acceleration,
-            const std::array<double, 7> lower_torque_thresholds_nominal,
-            const std::array<double, 7> upper_torque_thresholds_nominal,
-            const std::array<double, 6> lower_force_thresholds_acceleration,
-            const std::array<double, 6> upper_force_thresholds_acceleration,
-            const std::array<double, 6> lower_force_thresholds_nominal,
-            const std::array<double, 6> upper_force_thresholds_nominal)
+    Request(const std::array<double, 7>& lower_torque_thresholds_acceleration,
+            const std::array<double, 7>& upper_torque_thresholds_acceleration,
+            const std::array<double, 7>& lower_torque_thresholds_nominal,
+            const std::array<double, 7>& upper_torque_thresholds_nominal,
+            const std::array<double, 6>& lower_force_thresholds_acceleration,
+            const std::array<double, 6>& upper_force_thresholds_acceleration,
+            const std::array<double, 6>& lower_force_thresholds_nominal,
+            const std::array<double, 6>& upper_force_thresholds_nominal)
         : lower_torque_thresholds_acceleration(lower_torque_thresholds_acceleration),
           upper_torque_thresholds_acceleration(upper_torque_thresholds_acceleration),
           lower_torque_thresholds_nominal(lower_torque_thresholds_nominal),
@@ -237,7 +239,7 @@ struct SetCollisionBehavior
 
 struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJointImpedance> {
   struct Request : public RequestBase<SetJointImpedance> {
-    Request(const std::array<double, 7> K_theta) : K_theta(K_theta) {}
+    Request(const std::array<double, 7>& K_theta) : K_theta(K_theta) {}
 
     const std::array<double, 7> K_theta;
   };
@@ -246,7 +248,7 @@ struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJo
 struct SetCartesianImpedance
     : public CommandBase<SetCartesianImpedance, Command::kSetCartesianImpedance> {
   struct Request : public RequestBase<SetCartesianImpedance> {
-    Request(const std::array<double, 6> K_x) : K_x(K_x) {}
+    Request(const std::array<double, 6>& K_x) : K_x(K_x) {}
 
     const std::array<double, 6> K_x;
   };
@@ -316,13 +318,6 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadMod
 
     const Architecture architecture;
     const System system;
-  };
-
-  struct Response : public ResponseBase<LoadModelLibrary> {
-    Response(Status status, uint32_t size) : ResponseBase(status), size(size) {}
-    Response(Status status) : Response(status, 0u) {}
-
-    const uint32_t size;
   };
 };
 
