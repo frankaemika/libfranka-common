@@ -25,20 +25,17 @@ enum class ControllerMode : uint8_t {
 };
 
 enum class RobotMode : uint8_t {
-  kEmergency,
+  kOther,
   kIdle,
   kMove,
-  kForce,
-  kMoveForce,
   kGuiding,
   kReflex,
-  kAutomaticErrorRecovery,
-  kEmergency2,
-  kRcuInputError
+  kUserStopped,
+  kAutomaticErrorRecovery
 };
 
 struct RobotState {
-  uint32_t message_id;
+  uint64_t message_id;
   std::array<double, 16> O_T_EE;
   std::array<double, 16> O_T_EE_d;
   std::array<double, 16> F_T_EE;
@@ -63,15 +60,14 @@ struct RobotState {
   std::array<double, 6> K_F_ext_hat_K;
   MotionGeneratorMode motion_generator_mode;
   ControllerMode controller_mode;
-  std::array<bool, 25> errors;
-  std::array<bool, 25> reflex_reason;
+  std::array<bool, 33> errors;
+  std::array<bool, 33> reflex_reason;
   RobotMode robot_mode;
 };
 
 struct MotionGeneratorCommand {
   std::array<double, 7> q_d;
   std::array<double, 7> dq_d;
-  std::array<double, 7> ddq_d;
   std::array<double, 16> O_T_EE_d;
   std::array<double, 6> O_dP_EE_d;
   std::array<double, 2> elbow_d;
@@ -84,7 +80,7 @@ struct ControllerCommand {
 };
 
 struct RobotCommand {
-  uint32_t message_id;
+  uint64_t message_id;
   MotionGeneratorCommand motion;
   ControllerCommand control;
 };

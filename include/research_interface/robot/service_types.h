@@ -193,8 +193,7 @@ struct SetControllerMode : public CommandBase<SetControllerMode, Command::kSetCo
     kMotorPD,
     kJointPosition,
     kJointImpedance,
-    kCartesianImpedance,
-    kExternalController
+    kCartesianImpedance
   };
 
   struct Request : public RequestBase<SetControllerMode> {
