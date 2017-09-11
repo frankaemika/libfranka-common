@@ -20,7 +20,6 @@ enum class Command : uint32_t {
   kMove,
   kStopMove,
   kGetCartesianLimit,
-  kSetControllerMode,
   kSetCollisionBehavior,
   kSetJointImpedance,
   kSetCartesianImpedance,
@@ -28,7 +27,6 @@ enum class Command : uint32_t {
   kSetEEToK,
   kSetFToEE,
   kSetLoad,
-  kSetTimeScalingFactor,
   kAutomaticErrorRecovery,
   kLoadModelLibrary
 };
@@ -118,8 +116,6 @@ struct Connect : CommandBase<Connect, Command::kConnect> {
 
 struct Move : public CommandBase<Move, Command::kMove> {
   enum class ControllerMode : uint32_t {
-    kMotorPD,
-    kJointPosition,
     kJointImpedance,
     kCartesianImpedance,
     kExternalController
@@ -185,21 +181,6 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
     const std::array<double, 3> object_p_max;
     const std::array<double, 16> object_frame;
     const bool object_activation;
-  };
-};
-
-struct SetControllerMode : public CommandBase<SetControllerMode, Command::kSetControllerMode> {
-  enum class ControllerMode : uint32_t {
-    kMotorPD,
-    kJointPosition,
-    kJointImpedance,
-    kCartesianImpedance
-  };
-
-  struct Request : public RequestBase<SetControllerMode> {
-    Request(ControllerMode mode) : mode(mode) {}
-
-    const ControllerMode mode;
   };
 };
 
@@ -290,15 +271,6 @@ struct SetLoad : public CommandBase<SetLoad, Command::kSetLoad> {
     const double m_load;
     const std::array<double, 3> F_x_Cload;
     const std::array<double, 9> I_load;
-  };
-};
-
-struct SetTimeScalingFactor
-    : public CommandBase<SetTimeScalingFactor, Command::kSetTimeScalingFactor> {
-  struct Request : public RequestBase<SetTimeScalingFactor> {
-    Request(double time_scaling_factor) : time_scaling_factor(time_scaling_factor) {}
-
-    const double time_scaling_factor;
   };
 };
 
