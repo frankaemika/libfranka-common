@@ -20,7 +20,6 @@ enum class Command : uint32_t {
   kMove,
   kStopMove,
   kGetCartesianLimit,
-  kSetControllerMode,
   kSetCollisionBehavior,
   kSetJointImpedance,
   kSetCartesianImpedance,
