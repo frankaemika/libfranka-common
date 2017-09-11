@@ -24,11 +24,6 @@ struct CommandTraits<GetCartesianLimit> {
 };
 
 template <>
-struct CommandTraits<SetControllerMode> {
-  static constexpr const char* kName = "Set Controller Mode";
-};
-
-template <>
 struct CommandTraits<SetCollisionBehavior> {
   static constexpr const char* kName = "Set Collision Behavior";
 };

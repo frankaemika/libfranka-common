@@ -183,20 +183,6 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
   };
 };
 
-struct SetControllerMode : public CommandBase<SetControllerMode, Command::kSetControllerMode> {
-  enum class ControllerMode : uint32_t {
-    kJointImpedance,
-    kCartesianImpedance,
-    kExternalController
-  };
-
-  struct Request : public RequestBase<SetControllerMode> {
-    Request(ControllerMode mode) : mode(mode) {}
-
-    const ControllerMode mode;
-  };
-};
-
 struct SetCollisionBehavior
     : public CommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
   struct Request : public RequestBase<SetCollisionBehavior> {
