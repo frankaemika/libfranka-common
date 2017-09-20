@@ -47,6 +47,7 @@ struct RobotState {
   std::array<double, 2> elbow;
   std::array<double, 2> elbow_d;
   std::array<double, 7> tau_J;
+  std::array<double, 7> tau_J_d;
   std::array<double, 7> dtau_J;
   std::array<double, 7> q;
   std::array<double, 7> q_d;
