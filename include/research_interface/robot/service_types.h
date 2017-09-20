@@ -14,7 +14,7 @@ namespace robot {
 
 using Version = uint16_t;
 
-constexpr Version kVersion = 1;
+constexpr Version kVersion = 2;
 constexpr uint16_t kCommandPort = 1337;
 
 enum class Command : uint32_t {
