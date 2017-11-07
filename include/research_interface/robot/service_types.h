@@ -7,6 +7,8 @@
 #include <cstring>
 #include <type_traits>
 
+#include <research_interface/robot/status_reason.h>
+
 namespace research_interface {
 namespace robot {
 
@@ -48,9 +50,10 @@ struct RequestBase {};
 
 template <typename T>
 struct ResponseBase {
-  ResponseBase(typename T::Status status) : status(status) {}
+  ResponseBase(typename T::Status status, StatusReason reason) : status(status), reason(reason) {}
 
   const typename T::Status status;
+  const StatusReason reason;
 
   static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
   static_assert(
@@ -110,7 +113,7 @@ struct Connect : CommandBase<Connect, Command::kConnect> {
   };
 
   struct Response : public ResponseBase<Connect> {
-    Response(Status status) : ResponseBase(status), version(kVersion) {}
+    Response(Status status) : ResponseBase(status, StatusReason::kNoReason), version(kVersion) {}
 
     const Version version;
   };
@@ -168,16 +171,17 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
 
   struct Response : public ResponseBase<GetCartesianLimit> {
     Response(Status status,
+             StatusReason reason,
              const std::array<double, 3>& object_p_min,
              const std::array<double, 3>& object_p_max,
              const std::array<double, 16>& object_frame,
              bool object_activation)
-        : ResponseBase(status),
+        : ResponseBase(status, reason),
           object_p_min(object_p_min),
           object_p_max(object_p_max),
           object_frame(object_frame),
           object_activation(object_activation) {}
-    Response(Status status) : Response(status, {}, {}, {}, false) {}
+    Response(Status status, StatusReason reason) : Response(status, reason, {}, {}, {}, false) {}
 
     const std::array<double, 3> object_p_min;
     const std::array<double, 3> object_p_max;
