@@ -6,25 +6,25 @@ namespace research_interface {
 namespace robot {
 
 enum class StatusReason : size_t {
-    kNoReason,
-    kMoveFinished,
-    kCommandApplied,
-    kStopCommandPreempted,
-    kGuidingPreempted,
-    kEmergencyAborted,
-    kReflexAborted,
-    kOutOfRangeRejected,
-    kNotValidFrameRejected,
-    kNotValidElementRejected,
-    kElbowSignInconsistentRejected,
-    kCommandNotPossibleRejected,
-    kNoop,
-    kStopFinished,
-    kStopMovePreempted,
-    kRcuInputErrorAborted,
-    kNotValidElbowRejected,
-    kGuidingSlowDownFinished,
-    kStartAtSingularPoseRejected
+  kNoReason,
+  kMoveFinished,
+  kCommandApplied,
+  kStopCommandPreempted,
+  kGuidingPreempted,
+  kEmergencyAborted,
+  kReflexAborted,
+  kOutOfRangeRejected,
+  kNotValidFrameRejected,
+  kNotValidElementRejected,
+  kElbowSignInconsistentRejected,
+  kCommandNotPossibleRejected,
+  kNoop,
+  kStopFinished,
+  kStopMovePreempted,
+  kRcuInputErrorAborted,
+  kNotValidElbowRejected,
+  kGuidingSlowDownFinished,
+  kStartAtSingularPoseRejected
 };
 
 }  // namespace robot
