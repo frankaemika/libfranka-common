@@ -14,7 +14,7 @@ namespace gripper {
 
 using Version = uint16_t;
 
-constexpr Version kVersion = 1;
+constexpr Version kVersion = 2;
 constexpr uint16_t kCommandPort = 1338;
 
 enum class Command : uint16_t { kConnect, kHoming, kGrasp, kMove, kStop };
