@@ -113,7 +113,7 @@ struct Connect : CommandBase<Connect, Command::kConnect> {
   };
 
   struct Response : public ResponseBase<Connect> {
-    Response(Status status) : ResponseBase(status, StatusReason::kNoReason), version(kVersion) {}
+    Response(Status status) : ResponseBase(status, StatusReason::kOther), version(kVersion) {}
 
     const Version version;
   };
@@ -299,7 +299,7 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadMod
   };
 
   struct Response : public ResponseBase<LoadModelLibrary> {
-    Response(Status status) : ResponseBase(status, StatusReason::kNoReason){}
+    Response(Status status) : ResponseBase(status, StatusReason::kOther) {}
   };
 };
 

@@ -5,10 +5,8 @@
 namespace research_interface {
 namespace robot {
 
-enum class StatusReason : size_t {
-  kNoReason,
-  kMoveFinished,
-  kCommandApplied,
+enum class StatusReason : uint8_t {
+  kOther,
   kStopCommandPreempted,
   kGuidingPreempted,
   kEmergencyAborted,
@@ -19,11 +17,9 @@ enum class StatusReason : size_t {
   kElbowSignInconsistentRejected,
   kCommandNotPossibleRejected,
   kNoop,
-  kStopFinished,
   kStopMovePreempted,
   kRcuInputErrorAborted,
   kNotValidElbowRejected,
-  kGuidingSlowDownFinished,
   kStartAtSingularPoseRejected
 };
 
