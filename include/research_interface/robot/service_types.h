@@ -16,7 +16,7 @@ namespace robot {
 
 using Version = uint16_t;
 
-constexpr Version kVersion = 2;
+constexpr Version kVersion = 3;
 constexpr uint16_t kCommandPort = 1337;
 
 enum class Command : uint32_t {
@@ -296,6 +296,10 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadMod
 
     const Architecture architecture;
     const System system;
+  };
+
+  struct Response : public ResponseBase<LoadModelLibrary> {
+    Response(Status status) : ResponseBase(status, StatusReason::kNoReason){}
   };
 };
 
