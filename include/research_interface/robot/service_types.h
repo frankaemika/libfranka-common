@@ -100,7 +100,7 @@ struct CommandBase {
 
 template <typename T, Command C>
 struct SetterCommandBase : CommandBase<T, C> {
-  enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected, kInvalidArgument };
+  enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected, kInvalidArgumentRejected };
 };
 
 struct Connect : CommandBase<Connect, Command::kConnect> {
