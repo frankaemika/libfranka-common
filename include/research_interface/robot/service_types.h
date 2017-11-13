@@ -7,8 +7,6 @@
 #include <cstring>
 #include <type_traits>
 
-#include <research_interface/robot/status_reason.h>
-
 namespace research_interface {
 namespace robot {
 
@@ -50,10 +48,9 @@ struct RequestBase {};
 
 template <typename T>
 struct ResponseBase {
-  ResponseBase(typename T::Status status, StatusReason reason) : status(status), reason(reason) {}
+  ResponseBase(typename T::Status status) : status(status) {}
 
   const typename T::Status status;
-  const StatusReason reason;
 
   static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
   static_assert(
@@ -93,7 +90,7 @@ struct CommandBase {
 
   static constexpr Command kCommand = C;
 
-  enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted };
+  enum class Status : uint32_t { kSuccess, kRejected };
 
   using Header = CommandHeader;
   using Request = RequestBase<T>;
@@ -113,7 +110,7 @@ struct Connect : CommandBase<Connect, Command::kConnect> {
   };
 
   struct Response : public ResponseBase<Connect> {
-    Response(Status status) : ResponseBase(status, StatusReason::kOther), version(kVersion) {}
+    Response(Status status) : ResponseBase(status), version(kVersion) {}
 
     const Version version;
   };
@@ -133,7 +130,8 @@ struct Move : public CommandBase<Move, Command::kMove> {
     kCartesianVelocity
   };
 
-  enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted, kMotionStarted };
+  enum class Status : uint32_t { kSuccess, kRejected, kMotionStarted, kPreempted,
+    kStartAtSingularPoseRejected, kReflexAborted, kEmergencyAborted, kInputErrorAborted };
 
   struct Deviation {
     constexpr Deviation(double translation, double rotation, double elbow)
@@ -169,6 +167,8 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
     const int32_t id;
   };
 
+  enum class Status : uint32_t { kSuccess, kInvalidArgument };
+
   struct Response : public ResponseBase<GetCartesianLimit> {
     Response(Status status,
              StatusReason reason,
@@ -192,7 +192,9 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
 
 struct SetCollisionBehavior
     : public CommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
-  struct Request : public RequestBase<SetCollisionBehavior> {
+    enum class Status : uint32_t { kSuccess, kRejected, kInvalidArgument };
+
+    struct Request : public RequestBase<SetCollisionBehavior> {
     Request(const std::array<double, 7>& lower_torque_thresholds_acceleration,
             const std::array<double, 7>& upper_torque_thresholds_acceleration,
             const std::array<double, 7>& lower_torque_thresholds_nominal,
@@ -228,6 +230,8 @@ struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJo
   struct Request : public RequestBase<SetJointImpedance> {
     Request(const std::array<double, 7>& K_theta) : K_theta(K_theta) {}
 
+    enum class Status : uint32_t { kSuccess, kRejected, kInvalidArgument };
+
     const std::array<double, 7> K_theta;
   };
 };
@@ -236,6 +240,8 @@ struct SetCartesianImpedance
     : public CommandBase<SetCartesianImpedance, Command::kSetCartesianImpedance> {
   struct Request : public RequestBase<SetCartesianImpedance> {
     Request(const std::array<double, 6>& K_x) : K_x(K_x) {}
+
+    enum class Status : uint32_t { kSuccess, kRejected, kInvalidArgument };
 
     const std::array<double, 6> K_x;
   };
@@ -255,6 +261,8 @@ struct SetEEToK : public CommandBase<SetEEToK, Command::kSetEEToK> {
   struct Request : public RequestBase<SetEEToK> {
     Request(const std::array<double, 16>& EE_T_K) : EE_T_K(EE_T_K) {}
 
+    enum class Status : uint32_t { kSuccess, kRejected, kInvalidArgument };
+
     const std::array<double, 16> EE_T_K;
   };
 };
@@ -262,6 +270,8 @@ struct SetEEToK : public CommandBase<SetEEToK, Command::kSetEEToK> {
 struct SetFToEE : public CommandBase<SetFToEE, Command::kSetFToEE> {
   struct Request : public RequestBase<SetFToEE> {
     Request(const std::array<double, 16>& F_T_EE) : F_T_EE(F_T_EE) {}
+
+    enum class Status : uint32_t { kSuccess, kRejected, kInvalidArgument };
 
     const std::array<double, 16> F_T_EE;
   };
@@ -273,6 +283,8 @@ struct SetLoad : public CommandBase<SetLoad, Command::kSetLoad> {
             const std::array<double, 3>& F_x_Cload,
             const std::array<double, 9>& I_load)
         : m_load(m_load), F_x_Cload(F_x_Cload), I_load(I_load) {}
+
+    enum class Status : uint32_t { kSuccess, kRejected, kInvalidArgument };
 
     const double m_load;
     const std::array<double, 3> F_x_Cload;
