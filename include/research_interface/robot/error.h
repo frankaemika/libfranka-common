@@ -112,7 +112,7 @@ const char* getErrorName(Error error) {
     case Error::kStartElbowSignInconsistent:
       return "start_elbow_sign_inconsistent";
     case Error::kJointP2PInsufficientTorqueForPlanning:
-      return "joint_p2p_planning_insufficient_torque_for_planning";
+      return "joint_p2p_insufficient_torque_for_planning";
     case Error::kTauJRangeViolation:
       return "tau_J_range_violation";
   }
