@@ -111,10 +111,7 @@ struct Grasp : public CommandBase<Grasp, Command::kGrasp> {
   };
   struct Request : public RequestBase<Grasp> {
     Request(double width, GraspEpsilon epsilon, double speed, double force)
-        : width(width),
-          epsilon(epsilon),
-          speed(speed),
-          force(force) {}
+    : width(width), epsilon(epsilon), speed(speed), force(force) {}
 
     const double width;
     const GraspEpsilon epsilon;
