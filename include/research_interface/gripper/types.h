@@ -29,49 +29,49 @@ struct CommandHeader {
   uint32_t size;
 };
 
-template <typename T>
-struct RequestBase {};
+template <typename T> struct RequestBase {};
 
-template <typename T>
-struct ResponseBase {
+template <typename T> struct ResponseBase {
   ResponseBase(typename T::Status status) : status(status) {}
 
   const typename T::Status status;
 
-  static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
+  static_assert(std::is_enum<decltype(status)>::value,
+                "Status must be an enum.");
   static_assert(
-      std::is_same<typename std::underlying_type<decltype(status)>::type, uint16_t>::value,
+      std::is_same<typename std::underlying_type<decltype(status)>::type,
+                   uint16_t>::value,
       "Status must be of type uint16_t.");
   static_assert(static_cast<uint16_t>(decltype(status)::kSuccess) == 0,
                 "Status must define kSuccess with value of 0.");
 };
 
-template <typename T>
-struct CommandMessage {
+template <typename T> struct CommandMessage {
   CommandMessage() = default;
-  CommandMessage(const CommandHeader& header, const T& instance) : header(header) {
+  CommandMessage(const CommandHeader &header, const T &instance)
+      : header(header) {
     std::memcpy(payload.data(), &instance, payload.size());
   }
 
-  T getInstance() const noexcept { return *reinterpret_cast<const T*>(payload.data()); }
+  T getInstance() const noexcept {
+    return *reinterpret_cast<const T *>(payload.data());
+  }
 
   CommandHeader header;
   std::array<uint8_t, sizeof(T)> payload;
 };
 
-template <>
-template <typename T>
-struct CommandMessage<RequestBase<T>> {
+template <> template <typename T> struct CommandMessage<RequestBase<T>> {
   CommandMessage() = default;
-  CommandMessage(const CommandHeader& header, const RequestBase<T>&) : header(header) {}
+  CommandMessage(const CommandHeader &header, const RequestBase<T> &)
+      : header(header) {}
 
   RequestBase<T> getInstance() const noexcept { return RequestBase<T>(); }
 
   CommandHeader header;
 };
 
-template <typename T, Command C>
-struct CommandBase {
+template <typename T, Command C> struct CommandBase {
   CommandBase() = delete;
 
   static constexpr Command kCommand = C;
@@ -81,8 +81,7 @@ struct CommandBase {
   using Header = CommandHeader;
   using Request = RequestBase<T>;
   using Response = ResponseBase<T>;
-  template <typename P>
-  using Message = CommandMessage<P>;
+  template <typename P> using Message = CommandMessage<P>;
 };
 
 struct Connect : CommandBase<Connect, Command::kConnect> {
@@ -111,10 +110,7 @@ struct Grasp : public CommandBase<Grasp, Command::kGrasp> {
   };
   struct Request : public RequestBase<Grasp> {
     Request(double width, GraspEpsilon epsilon, double speed, double force)
-        : width(width),
-          epsilon(epsilon),
-          speed(speed),
-          force(force) {}
+        : width(width), epsilon(epsilon), speed(speed), force(force) {}
 
     const double width;
     const GraspEpsilon epsilon;
@@ -144,5 +140,5 @@ struct GripperState {
 
 #pragma pack(pop)
 
-}  // namespace gripper
-}  // namespace research_interface
+} // namespace gripper
+} // namespace research_interface
