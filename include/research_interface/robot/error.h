@@ -38,7 +38,9 @@ enum class Error : size_t {
   kCartesianMotionGeneratorJointVelocityDiscontinuity,
   kCartesianMotionGeneratorJointAccelerationDiscontinuity,
   kCartesianPositionMotionGeneratorInvalidFrame,
-  kControllerTorqueDiscontinuity
+  kControllerTorqueDiscontinuity,
+  kJointP2PInsufficientTorqueForPlanning,
+  kTauJRangeViolation
 };
 
 const char* getErrorName(Error error) {
@@ -109,6 +111,10 @@ const char* getErrorName(Error error) {
       return "self_collision_avoidance_violation";
     case Error::kStartElbowSignInconsistent:
       return "start_elbow_sign_inconsistent";
+    case Error::kJointP2PInsufficientTorqueForPlanning:
+      return "joint_p2p_insufficient_torque_for_planning";
+    case Error::kTauJRangeViolation:
+      return "tau_J_range_violation";
   }
   throw std::logic_error("Invalid Error given.");
 }
