@@ -106,8 +106,9 @@ struct Homing : public CommandBase<Homing, Command::kHoming> {};
 
 struct Grasp : public CommandBase<Grasp, Command::kGrasp> {
   struct GraspEpsilon {
-    double inner;
-    double outer;
+    constexpr GraspEpsilon(double inner, double outer) : inner(inner), outer(outer) {}
+    const double inner;
+    const double outer;
   };
   struct Request : public RequestBase<Grasp> {
     Request(double width, GraspEpsilon epsilon, double speed, double force)
