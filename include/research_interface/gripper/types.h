@@ -105,17 +105,17 @@ struct Connect : CommandBase<Connect, Command::kConnect> {
 struct Homing : public CommandBase<Homing, Command::kHoming> {};
 
 struct Grasp : public CommandBase<Grasp, Command::kGrasp> {
+  struct GraspEpsilon {
+    constexpr GraspEpsilon(double inner, double outer) : inner(inner), outer(outer) {}
+    const double inner;
+    const double outer;
+  };
   struct Request : public RequestBase<Grasp> {
-    Request(double width, double epsilon_inner, double epsilon_outer, double speed, double force)
-        : width(width),
-          epsilon_inner(epsilon_inner),
-          epsilon_outer(epsilon_outer),
-          speed(speed),
-          force(force) {}
+    Request(double width, GraspEpsilon epsilon, double speed, double force)
+        : width(width), epsilon(epsilon), speed(speed), force(force) {}
 
     const double width;
-    const double epsilon_inner;
-    const double epsilon_outer;
+    const GraspEpsilon epsilon;
     const double speed;
     const double force;
   };
