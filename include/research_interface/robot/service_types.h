@@ -53,9 +53,8 @@ struct ResponseBase {
   const typename T::Status status;
 
   static_assert(std::is_enum<decltype(status)>::value, "Status must be an enum.");
-  static_assert(
-      std::is_same<typename std::underlying_type<decltype(status)>::type, uint32_t>::value,
-      "Status must be of type uint32_t.");
+  static_assert(std::is_same<typename std::underlying_type<decltype(status)>::type, uint8_t>::value,
+                "Status must be of type uint8_t.");
   static_assert(static_cast<uint32_t>(decltype(status)::kSuccess) == 0,
                 "Status must define kSuccess with value of 0.");
 };
@@ -90,7 +89,7 @@ struct CommandBase {
 
   static constexpr Command kCommand = C;
 
-  enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted };
+  enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected };
 
   using Header = CommandHeader;
   using Request = RequestBase<T>;
@@ -99,8 +98,13 @@ struct CommandBase {
   using Message = CommandMessage<P>;
 };
 
+template <typename T, Command C>
+struct SetterCommandBase : CommandBase<T, C> {
+  enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected, kInvalidArgumentRejected };
+};
+
 struct Connect : CommandBase<Connect, Command::kConnect> {
-  enum class Status : uint32_t { kSuccess, kIncompatibleLibraryVersion };
+  enum class Status : uint8_t { kSuccess, kIncompatibleLibraryVersion };
 
   struct Request : public RequestBase<Connect> {
     Request(uint16_t udp_port) : version(kVersion), udp_port(udp_port) {}
@@ -130,7 +134,17 @@ struct Move : public CommandBase<Move, Command::kMove> {
     kCartesianVelocity
   };
 
-  enum class Status : uint32_t { kSuccess, kAborted, kRejected, kPreempted, kMotionStarted };
+  enum class Status : uint8_t {
+    kSuccess,
+    kMotionStarted,
+    kPreempted,
+    kCommandNotPossibleRejected,
+    kStartAtSingularPoseRejected,
+    kOutOfRangeRejected,
+    kReflexAborted,
+    kEmergencyAborted,
+    kInputErrorAborted
+  };
 
   struct Deviation {
     constexpr Deviation(double translation, double rotation, double elbow)
@@ -187,7 +201,7 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
 };
 
 struct SetCollisionBehavior
-    : public CommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
+    : public SetterCommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
   struct Request : public RequestBase<SetCollisionBehavior> {
     Request(const std::array<double, 7>& lower_torque_thresholds_acceleration,
             const std::array<double, 7>& upper_torque_thresholds_acceleration,
@@ -220,7 +234,8 @@ struct SetCollisionBehavior
   };
 };
 
-struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJointImpedance> {
+struct SetJointImpedance
+    : public SetterCommandBase<SetJointImpedance, Command::kSetJointImpedance> {
   struct Request : public RequestBase<SetJointImpedance> {
     Request(const std::array<double, 7>& K_theta) : K_theta(K_theta) {}
 
@@ -229,7 +244,7 @@ struct SetJointImpedance : public CommandBase<SetJointImpedance, Command::kSetJo
 };
 
 struct SetCartesianImpedance
-    : public CommandBase<SetCartesianImpedance, Command::kSetCartesianImpedance> {
+    : public SetterCommandBase<SetCartesianImpedance, Command::kSetCartesianImpedance> {
   struct Request : public RequestBase<SetCartesianImpedance> {
     Request(const std::array<double, 6>& K_x) : K_x(K_x) {}
 
@@ -237,7 +252,7 @@ struct SetCartesianImpedance
   };
 };
 
-struct SetGuidingMode : public CommandBase<SetGuidingMode, Command::kSetGuidingMode> {
+struct SetGuidingMode : public SetterCommandBase<SetGuidingMode, Command::kSetGuidingMode> {
   struct Request : public RequestBase<SetGuidingMode> {
     Request(const std::array<bool, 6>& guiding_mode, bool nullspace)
         : guiding_mode(guiding_mode), nullspace(nullspace) {}
@@ -247,7 +262,7 @@ struct SetGuidingMode : public CommandBase<SetGuidingMode, Command::kSetGuidingM
   };
 };
 
-struct SetEEToK : public CommandBase<SetEEToK, Command::kSetEEToK> {
+struct SetEEToK : public SetterCommandBase<SetEEToK, Command::kSetEEToK> {
   struct Request : public RequestBase<SetEEToK> {
     Request(const std::array<double, 16>& EE_T_K) : EE_T_K(EE_T_K) {}
 
@@ -255,7 +270,7 @@ struct SetEEToK : public CommandBase<SetEEToK, Command::kSetEEToK> {
   };
 };
 
-struct SetFToEE : public CommandBase<SetFToEE, Command::kSetFToEE> {
+struct SetFToEE : public SetterCommandBase<SetFToEE, Command::kSetFToEE> {
   struct Request : public RequestBase<SetFToEE> {
     Request(const std::array<double, 16>& F_T_EE) : F_T_EE(F_T_EE) {}
 
@@ -263,7 +278,7 @@ struct SetFToEE : public CommandBase<SetFToEE, Command::kSetFToEE> {
   };
 };
 
-struct SetLoad : public CommandBase<SetLoad, Command::kSetLoad> {
+struct SetLoad : public SetterCommandBase<SetLoad, Command::kSetLoad> {
   struct Request : public RequestBase<SetLoad> {
     Request(double m_load,
             const std::array<double, 3>& F_x_Cload,
@@ -280,7 +295,7 @@ struct AutomaticErrorRecovery
     : public CommandBase<AutomaticErrorRecovery, Command::kAutomaticErrorRecovery> {};
 
 struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadModelLibrary> {
-  enum class Status : uint32_t { kSuccess, kError };
+  enum class Status : uint8_t { kSuccess, kError };
 
   enum class Architecture : uint8_t { kX64 };
 
