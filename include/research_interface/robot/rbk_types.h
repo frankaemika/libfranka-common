@@ -41,6 +41,9 @@ struct RobotState {
   std::array<double, 16> O_T_EE_d;
   std::array<double, 16> F_T_EE;
   std::array<double, 16> EE_T_K;
+  double m_ee;
+  std::array<double, 9> I_ee;
+  std::array<double, 3> F_x_Cee;
   double m_load;
   std::array<double, 9> I_load;
   std::array<double, 3> F_x_Cload;
