@@ -40,7 +40,8 @@ enum class Error : size_t {
   kCartesianPositionMotionGeneratorInvalidFrame,
   kControllerTorqueDiscontinuity,
   kJointP2PInsufficientTorqueForPlanning,
-  kTauJRangeViolation
+  kTauJRangeViolation,
+  kInstabilityDetection
 };
 
 const char* getErrorName(Error error) {
@@ -115,6 +116,8 @@ const char* getErrorName(Error error) {
       return "joint_p2p_insufficient_torque_for_planning";
     case Error::kTauJRangeViolation:
       return "tau_J_range_violation";
+    case Error::kInstabilityDetection:
+      return "instability_detection";
   }
   throw std::logic_error("Invalid Error given.");
 }

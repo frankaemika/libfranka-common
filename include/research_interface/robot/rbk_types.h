@@ -65,8 +65,8 @@ struct RobotState {
   std::array<double, 6> K_F_ext_hat_K;
   MotionGeneratorMode motion_generator_mode;
   ControllerMode controller_mode;
-  std::array<bool, 35> errors;
-  std::array<bool, 35> reflex_reason;
+  std::array<bool, 36> errors;
+  std::array<bool, 36> reflex_reason;
   RobotMode robot_mode;
   double control_command_success_rate;
 };
