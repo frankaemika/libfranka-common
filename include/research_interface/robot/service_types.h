@@ -29,6 +29,7 @@ enum class Command : uint32_t {
   kSetEEToK,
   kSetFToEE,
   kSetLoad,
+  kSetFciFilters,
   kAutomaticErrorRecovery,
   kLoadModelLibrary
 };
@@ -288,6 +289,27 @@ struct SetLoad : public SetterCommandBase<SetLoad, Command::kSetLoad> {
     const double m_load;
     const std::array<double, 3> F_x_Cload;
     const std::array<double, 9> I_load;
+  };
+};
+
+struct SetFciFilters : public SetterCommandBase<SetFciFilters, Command::kSetFciFilters> {
+  struct Request : public RequestBase<SetFciFilters> {
+    Request(double external_joint_position_filter_frequency,
+            double external_joint_velocity_filter_frequency,
+            double external_cartesian_position_filter_frequency,
+            double external_cartesian_velocity_filter_frequency,
+            double external_controller_filter_frequency)
+        : external_joint_position_filter_frequency(external_joint_position_filter_frequency),
+          external_joint_velocity_filter_frequency(external_joint_velocity_filter_frequency),
+          external_cartesian_position_filter_frequency(external_cartesian_position_filter_frequency),
+          external_cartesian_velocity_filter_frequency(external_cartesian_velocity_filter_frequency),
+          external_controller_filter_frequency(external_controller_filter_frequency) {}
+
+    const double external_joint_position_filter_frequency;
+    const double external_joint_velocity_filter_frequency;
+    const double external_cartesian_position_filter_frequency;
+    const double external_cartesian_velocity_filter_frequency;
+    const double external_controller_filter_frequency;
   };
 };
 

@@ -61,6 +61,11 @@ struct CommandTraits<SetLoad> {
 };
 
 template <>
+struct CommandTraits<SetFciFilters> {
+  static constexpr const char* kName = "Set Fci Filters";
+};
+
+template <>
 struct CommandTraits<AutomaticErrorRecovery> {
   static constexpr const char* kName = "Automatic Error Recovery";
 };
