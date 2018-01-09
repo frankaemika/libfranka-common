@@ -301,8 +301,10 @@ struct SetFciFilters : public SetterCommandBase<SetFciFilters, Command::kSetFciF
             double external_controller_filter_frequency)
         : external_joint_position_filter_frequency(external_joint_position_filter_frequency),
           external_joint_velocity_filter_frequency(external_joint_velocity_filter_frequency),
-          external_cartesian_position_filter_frequency(external_cartesian_position_filter_frequency),
-          external_cartesian_velocity_filter_frequency(external_cartesian_velocity_filter_frequency),
+          external_cartesian_position_filter_frequency(
+              external_cartesian_position_filter_frequency),
+          external_cartesian_velocity_filter_frequency(
+              external_cartesian_velocity_filter_frequency),
           external_controller_filter_frequency(external_controller_filter_frequency) {}
 
     const double external_joint_position_filter_frequency;
