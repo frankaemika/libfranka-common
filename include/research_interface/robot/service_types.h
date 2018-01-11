@@ -29,7 +29,7 @@ enum class Command : uint32_t {
   kSetEEToK,
   kSetFToEE,
   kSetLoad,
-  kSetFciFilters,
+  kSetFilters,
   kAutomaticErrorRecovery,
   kLoadModelLibrary
 };
@@ -292,26 +292,24 @@ struct SetLoad : public SetterCommandBase<SetLoad, Command::kSetLoad> {
   };
 };
 
-struct SetFciFilters : public SetterCommandBase<SetFciFilters, Command::kSetFciFilters> {
-  struct Request : public RequestBase<SetFciFilters> {
-    Request(double external_joint_position_filter_frequency,
-            double external_joint_velocity_filter_frequency,
-            double external_cartesian_position_filter_frequency,
-            double external_cartesian_velocity_filter_frequency,
-            double external_controller_filter_frequency)
-        : external_joint_position_filter_frequency(external_joint_position_filter_frequency),
-          external_joint_velocity_filter_frequency(external_joint_velocity_filter_frequency),
-          external_cartesian_position_filter_frequency(
-              external_cartesian_position_filter_frequency),
-          external_cartesian_velocity_filter_frequency(
-              external_cartesian_velocity_filter_frequency),
-          external_controller_filter_frequency(external_controller_filter_frequency) {}
+struct SetFilters : public SetterCommandBase<SetFilters, Command::kSetFilters> {
+  struct Request : public RequestBase<SetFilters> {
+    Request(double joint_position_filter_frequency,
+            double joint_velocity_filter_frequency,
+            double cartesian_position_filter_frequency,
+            double cartesian_velocity_filter_frequency,
+            double controller_filter_frequency)
+        : joint_position_filter_frequency(joint_position_filter_frequency),
+          joint_velocity_filter_frequency(joint_velocity_filter_frequency),
+          cartesian_position_filter_frequency(cartesian_position_filter_frequency),
+          cartesian_velocity_filter_frequency(cartesian_velocity_filter_frequency),
+          controller_filter_frequency(controller_filter_frequency) {}
 
-    const double external_joint_position_filter_frequency;
-    const double external_joint_velocity_filter_frequency;
-    const double external_cartesian_position_filter_frequency;
-    const double external_cartesian_velocity_filter_frequency;
-    const double external_controller_filter_frequency;
+    const double joint_position_filter_frequency;
+    const double joint_velocity_filter_frequency;
+    const double cartesian_position_filter_frequency;
+    const double cartesian_velocity_filter_frequency;
+    const double controller_filter_frequency;
   };
 };
 

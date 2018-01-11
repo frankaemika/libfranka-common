@@ -61,8 +61,8 @@ struct CommandTraits<SetLoad> {
 };
 
 template <>
-struct CommandTraits<SetFciFilters> {
-  static constexpr const char* kName = "Set Fci Filters";
+struct CommandTraits<SetFilters> {
+  static constexpr const char* kName = "Set Filters";
 };
 
 template <>
