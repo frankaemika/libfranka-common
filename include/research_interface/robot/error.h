@@ -117,7 +117,7 @@ const char* getErrorName(Error error) {
     case Error::kTauJRangeViolation:
       return "tau_J_range_violation";
     case Error::kInstabilityDetection:
-      return "instability_detection";
+      return "instability_detected";
   }
   throw std::logic_error("Invalid Error given.");
 }
