@@ -183,19 +183,16 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
 
   struct Response : public ResponseBase<GetCartesianLimit> {
     Response(Status status,
-             const std::array<double, 3>& object_p_min,
-             const std::array<double, 3>& object_p_max,
+             const std::array<double, 3>& object_world_size,
              const std::array<double, 16>& object_frame,
              bool object_activation)
         : ResponseBase(status),
-          object_p_min(object_p_min),
-          object_p_max(object_p_max),
+          object_world_size(object_world_size),
           object_frame(object_frame),
           object_activation(object_activation) {}
-    Response(Status status) : Response(status, {}, {}, {}, false) {}
+    Response(Status status) : Response(status, {}, {}, false) {}
 
-    const std::array<double, 3> object_p_min;
-    const std::array<double, 3> object_p_max;
+    const std::array<double, 3> object_world_size;
     const std::array<double, 16> object_frame;
     const bool object_activation;
   };
