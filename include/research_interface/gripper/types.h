@@ -14,7 +14,7 @@ namespace gripper {
 
 using Version = uint16_t;
 
-constexpr Version kVersion = 2;
+constexpr Version kVersion = 1;
 constexpr uint16_t kCommandPort = 1338;
 
 enum class Command : uint16_t { kConnect, kHoming, kGrasp, kMove, kStop };
@@ -105,17 +105,10 @@ struct Connect : CommandBase<Connect, Command::kConnect> {
 struct Homing : public CommandBase<Homing, Command::kHoming> {};
 
 struct Grasp : public CommandBase<Grasp, Command::kGrasp> {
-  struct GraspEpsilon {
-    constexpr GraspEpsilon(double inner, double outer) : inner(inner), outer(outer) {}
-    const double inner;
-    const double outer;
-  };
   struct Request : public RequestBase<Grasp> {
-    Request(double width, GraspEpsilon epsilon, double speed, double force)
-        : width(width), epsilon(epsilon), speed(speed), force(force) {}
+    Request(double width, double speed, double force) : width(width), speed(speed), force(force) {}
 
     const double width;
-    const GraspEpsilon epsilon;
     const double speed;
     const double force;
   };
