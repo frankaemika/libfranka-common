@@ -63,6 +63,7 @@ struct RobotState {
   std::array<double, 7> tau_ext_hat_filtered;
   std::array<double, 6> O_F_ext_hat_K;
   std::array<double, 6> K_F_ext_hat_K;
+  std::array<double, 6> O_dP_EE_d;
   std::array<double, 7> theta;
   std::array<double, 7> dtheta;
   MotionGeneratorMode motion_generator_mode;
