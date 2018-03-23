@@ -56,6 +56,7 @@ struct RobotState {
   std::array<double, 7> q_d;
   std::array<double, 7> dq;
   std::array<double, 7> dq_d;
+  std::array<double, 7> ddq_d;
   std::array<double, 7> joint_contact;
   std::array<double, 6> cartesian_contact;
   std::array<double, 7> joint_collision;
