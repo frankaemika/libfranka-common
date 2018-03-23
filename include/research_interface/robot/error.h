@@ -41,7 +41,8 @@ enum class Error : size_t {
   kControllerTorqueDiscontinuity,
   kJointP2PInsufficientTorqueForPlanning,
   kTauJRangeViolation,
-  kInstabilityDetection
+  kInstabilityDetection,
+  kJointMoveInWrongDirection
 };
 
 const char* getErrorName(Error error) {
@@ -118,6 +119,8 @@ const char* getErrorName(Error error) {
       return "tau_J_range_violation";
     case Error::kInstabilityDetection:
       return "instability_detected";
+    case Error::kJointMoveInWrongDirection:
+      return "joint_move_in_wrong_direction";
   }
   throw std::logic_error("Invalid Error given.");
 }
