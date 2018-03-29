@@ -59,7 +59,6 @@ struct CommandMessage {
   std::array<uint8_t, sizeof(T)> payload;
 };
 
-template <>
 template <typename T>
 struct CommandMessage<RequestBase<T>> {
   CommandMessage() = default;
