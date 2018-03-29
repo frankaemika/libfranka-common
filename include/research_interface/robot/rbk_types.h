@@ -69,8 +69,8 @@ struct RobotState {
   std::array<double, 2> delbow_c;
   std::array<double, 2> ddelbow_c;
   std::array<double, 16> O_T_EE_c;
-  std::array<double, 6> O_dp_EE_c;
-  std::array<double, 6> O_ddp_EE_c;
+  std::array<double, 6> O_dP_EE_c;
+  std::array<double, 6> O_ddP_EE_c;
   std::array<double, 7> theta;
   std::array<double, 7> dtheta;
   MotionGeneratorMode motion_generator_mode;
