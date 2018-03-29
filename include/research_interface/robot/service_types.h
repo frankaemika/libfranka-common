@@ -143,7 +143,8 @@ struct Move : public CommandBase<Move, Command::kMove> {
     kInvalidArgumentRejected,
     kReflexAborted,
     kEmergencyAborted,
-    kInputErrorAborted
+    kInputErrorAborted,
+    kAborted
   };
 
   struct Deviation {
@@ -171,7 +172,9 @@ struct Move : public CommandBase<Move, Command::kMove> {
   };
 };
 
-struct StopMove : public CommandBase<StopMove, Command::kStopMove> {};
+struct StopMove : public CommandBase<StopMove, Command::kStopMove> {
+  enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected, kAborted };
+};
 
 struct GetCartesianLimit
     : public GetterSetterCommandBase<GetCartesianLimit, Command::kGetCartesianLimit> {
@@ -318,7 +321,8 @@ struct AutomaticErrorRecovery
     kManualErrorRecoveryRequiredRejected,
     kReflexAborted,
     kEmergencyAborted,
-    kInputErrorAborted
+    kInputErrorAborted,
+    kAborted
   };
 };
 
