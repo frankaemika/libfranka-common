@@ -14,7 +14,7 @@ namespace robot {
 
 using Version = uint16_t;
 
-constexpr Version kVersion = 2;
+constexpr Version kVersion = 3;
 constexpr uint16_t kCommandPort = 1337;
 
 enum class Command : uint32_t {
@@ -73,7 +73,6 @@ struct CommandMessage {
   std::array<uint8_t, sizeof(T)> payload;
 };
 
-template <>
 template <typename T>
 struct CommandMessage<RequestBase<T>> {
   CommandMessage() = default;
@@ -100,7 +99,7 @@ struct CommandBase {
 };
 
 template <typename T, Command C>
-struct SetterCommandBase : CommandBase<T, C> {
+struct GetterSetterCommandBase : CommandBase<T, C> {
   enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected, kInvalidArgumentRejected };
 };
 
@@ -141,10 +140,11 @@ struct Move : public CommandBase<Move, Command::kMove> {
     kPreempted,
     kCommandNotPossibleRejected,
     kStartAtSingularPoseRejected,
-    kOutOfRangeRejected,
+    kInvalidArgumentRejected,
     kReflexAborted,
     kEmergencyAborted,
-    kInputErrorAborted
+    kInputErrorAborted,
+    kAborted
   };
 
   struct Deviation {
@@ -172,9 +172,12 @@ struct Move : public CommandBase<Move, Command::kMove> {
   };
 };
 
-struct StopMove : public CommandBase<StopMove, Command::kStopMove> {};
+struct StopMove : public CommandBase<StopMove, Command::kStopMove> {
+  enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected, kAborted };
+};
 
-struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCartesianLimit> {
+struct GetCartesianLimit
+    : public GetterSetterCommandBase<GetCartesianLimit, Command::kGetCartesianLimit> {
   struct Request : public RequestBase<GetCartesianLimit> {
     Request(int32_t id) : id(id) {}
 
@@ -199,7 +202,7 @@ struct GetCartesianLimit : public CommandBase<GetCartesianLimit, Command::kGetCa
 };
 
 struct SetCollisionBehavior
-    : public SetterCommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
+    : public GetterSetterCommandBase<SetCollisionBehavior, Command::kSetCollisionBehavior> {
   struct Request : public RequestBase<SetCollisionBehavior> {
     Request(const std::array<double, 7>& lower_torque_thresholds_acceleration,
             const std::array<double, 7>& upper_torque_thresholds_acceleration,
@@ -233,7 +236,7 @@ struct SetCollisionBehavior
 };
 
 struct SetJointImpedance
-    : public SetterCommandBase<SetJointImpedance, Command::kSetJointImpedance> {
+    : public GetterSetterCommandBase<SetJointImpedance, Command::kSetJointImpedance> {
   struct Request : public RequestBase<SetJointImpedance> {
     Request(const std::array<double, 7>& K_theta) : K_theta(K_theta) {}
 
@@ -242,7 +245,7 @@ struct SetJointImpedance
 };
 
 struct SetCartesianImpedance
-    : public SetterCommandBase<SetCartesianImpedance, Command::kSetCartesianImpedance> {
+    : public GetterSetterCommandBase<SetCartesianImpedance, Command::kSetCartesianImpedance> {
   struct Request : public RequestBase<SetCartesianImpedance> {
     Request(const std::array<double, 6>& K_x) : K_x(K_x) {}
 
@@ -250,7 +253,7 @@ struct SetCartesianImpedance
   };
 };
 
-struct SetGuidingMode : public SetterCommandBase<SetGuidingMode, Command::kSetGuidingMode> {
+struct SetGuidingMode : public GetterSetterCommandBase<SetGuidingMode, Command::kSetGuidingMode> {
   struct Request : public RequestBase<SetGuidingMode> {
     Request(const std::array<bool, 6>& guiding_mode, bool nullspace)
         : guiding_mode(guiding_mode), nullspace(nullspace) {}
@@ -260,7 +263,7 @@ struct SetGuidingMode : public SetterCommandBase<SetGuidingMode, Command::kSetGu
   };
 };
 
-struct SetEEToK : public SetterCommandBase<SetEEToK, Command::kSetEEToK> {
+struct SetEEToK : public GetterSetterCommandBase<SetEEToK, Command::kSetEEToK> {
   struct Request : public RequestBase<SetEEToK> {
     Request(const std::array<double, 16>& EE_T_K) : EE_T_K(EE_T_K) {}
 
@@ -268,7 +271,7 @@ struct SetEEToK : public SetterCommandBase<SetEEToK, Command::kSetEEToK> {
   };
 };
 
-struct SetFToEE : public SetterCommandBase<SetFToEE, Command::kSetFToEE> {
+struct SetFToEE : public GetterSetterCommandBase<SetFToEE, Command::kSetFToEE> {
   struct Request : public RequestBase<SetFToEE> {
     Request(const std::array<double, 16>& F_T_EE) : F_T_EE(F_T_EE) {}
 
@@ -276,7 +279,7 @@ struct SetFToEE : public SetterCommandBase<SetFToEE, Command::kSetFToEE> {
   };
 };
 
-struct SetLoad : public SetterCommandBase<SetLoad, Command::kSetLoad> {
+struct SetLoad : public GetterSetterCommandBase<SetLoad, Command::kSetLoad> {
   struct Request : public RequestBase<SetLoad> {
     Request(double m_load,
             const std::array<double, 3>& F_x_Cload,
@@ -289,7 +292,7 @@ struct SetLoad : public SetterCommandBase<SetLoad, Command::kSetLoad> {
   };
 };
 
-struct SetFilters : public SetterCommandBase<SetFilters, Command::kSetFilters> {
+struct SetFilters : public GetterSetterCommandBase<SetFilters, Command::kSetFilters> {
   struct Request : public RequestBase<SetFilters> {
     Request(double joint_position_filter_frequency,
             double joint_velocity_filter_frequency,
@@ -311,7 +314,17 @@ struct SetFilters : public SetterCommandBase<SetFilters, Command::kSetFilters> {
 };
 
 struct AutomaticErrorRecovery
-    : public CommandBase<AutomaticErrorRecovery, Command::kAutomaticErrorRecovery> {};
+    : public CommandBase<AutomaticErrorRecovery, Command::kAutomaticErrorRecovery> {
+  enum class Status : uint8_t {
+    kSuccess,
+    kCommandNotPossibleRejected,
+    kManualErrorRecoveryRequiredRejected,
+    kReflexAborted,
+    kEmergencyAborted,
+    kInputErrorAborted,
+    kAborted
+  };
+};
 
 struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadModelLibrary> {
   enum class Status : uint8_t { kSuccess, kError };
