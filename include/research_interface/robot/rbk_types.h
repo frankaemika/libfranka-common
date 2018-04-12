@@ -82,11 +82,11 @@ struct RobotState {
 };
 
 struct MotionGeneratorCommand {
-  std::array<double, 7> q_d;
-  std::array<double, 7> dq_d;
-  std::array<double, 16> O_T_EE_d;
-  std::array<double, 6> O_dP_EE_d;
-  std::array<double, 2> elbow_d;
+  std::array<double, 7> q_c;
+  std::array<double, 7> dq_c;
+  std::array<double, 16> O_T_EE_c;
+  std::array<double, 6> O_dP_EE_c;
+  std::array<double, 2> elbow_c;
   bool valid_elbow;
   bool motion_generation_finished;
 };
