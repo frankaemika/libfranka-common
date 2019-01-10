@@ -75,7 +75,7 @@ struct CommandBase {
 
   static constexpr Command kCommand = C;
 
-  enum class Status : uint16_t { kSuccess, kFail, kUnsuccessful };
+  enum class Status : uint16_t { kSuccess, kFail, kUnsuccessful, kAborted };
 
   using Header = CommandHeader;
   using Request = RequestBase<T>;
