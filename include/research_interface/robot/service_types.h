@@ -336,7 +336,7 @@ struct LoadModelLibrary : public CommandBase<LoadModelLibrary, Command::kLoadMod
 
   enum class Architecture : uint8_t { kX64 };
 
-  enum class System : uint8_t { kLinux };
+  enum class System : uint8_t { kLinux, kWindows };
 
   struct Request : public RequestBase<LoadModelLibrary> {
     Request(Architecture architecture, System system)
