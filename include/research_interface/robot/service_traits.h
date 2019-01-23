@@ -51,8 +51,8 @@ struct CommandTraits<SetEEToK> {
 };
 
 template <>
-struct CommandTraits<SetNEToEE> {
-  static constexpr const char* kName = "Set NE to EE";
+struct CommandTraits<SetFToEE> {
+  static constexpr const char* kName = "Set F to EE";
 };
 
 template <>
