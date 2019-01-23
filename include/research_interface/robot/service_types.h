@@ -14,7 +14,7 @@ namespace robot {
 
 using Version = uint16_t;
 
-constexpr Version kVersion = 4;
+constexpr Version kVersion = 3;
 constexpr uint16_t kCommandPort = 1337;
 
 enum class Command : uint32_t {
@@ -27,7 +27,7 @@ enum class Command : uint32_t {
   kSetCartesianImpedance,
   kSetGuidingMode,
   kSetEEToK,
-  kSetNEToEE,
+  kSetFToEE,
   kSetLoad,
   kSetFilters,
   kAutomaticErrorRecovery,
@@ -277,11 +277,11 @@ struct SetEEToK : public GetterSetterCommandBase<SetEEToK, Command::kSetEEToK> {
   };
 };
 
-struct SetNEToEE : public GetterSetterCommandBase<SetNEToEE, Command::kSetNEToEE> {
-  struct Request : public RequestBase<SetNEToEE> {
-    Request(const std::array<double, 16>& NE_T_EE) : NE_T_EE(NE_T_EE) {}
+struct SetFToEE : public GetterSetterCommandBase<SetFToEE, Command::kSetFToEE> {
+  struct Request : public RequestBase<SetFToEE> {
+    Request(const std::array<double, 16>& F_T_EE) : F_T_EE(F_T_EE) {}
 
-    const std::array<double, 16> NE_T_EE;
+    const std::array<double, 16> F_T_EE;
   };
 };
 
