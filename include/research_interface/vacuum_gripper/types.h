@@ -19,7 +19,7 @@ constexpr Version kVersion = 1;
 constexpr uint16_t kCommandPort = 1339;
 
 enum class Command : uint16_t { kConnect, kVacuum, kDropOff, kStop };
-enum class Profile : uint8_t { kP1, kP2, kP3, kP4 };
+enum class Profile : uint8_t { kP0, kP1, kP2, kP3 };
 enum class DeviceStatus : uint8_t {
   kGreen,
   kYellow,
