@@ -21,7 +21,6 @@ enum class Command : uint32_t {
   kConnect,
   kMove,
   kStopMove,
-  kGetCartesianLimit,
   kSetCollisionBehavior,
   kSetJointImpedance,
   kSetCartesianImpedance,
@@ -179,31 +178,6 @@ struct StopMove : public CommandBase<StopMove, Command::kStopMove> {
     kEmergencyAborted,
     kReflexAborted,
     kAborted
-  };
-};
-
-struct GetCartesianLimit
-    : public GetterSetterCommandBase<GetCartesianLimit, Command::kGetCartesianLimit> {
-  struct Request : public RequestBase<GetCartesianLimit> {
-    Request(int32_t id) : id(id) {}
-
-    const int32_t id;
-  };
-
-  struct Response : public ResponseBase<GetCartesianLimit> {
-    Response(Status status,
-             const std::array<double, 3>& object_world_size,
-             const std::array<double, 16>& object_frame,
-             bool object_activation)
-        : ResponseBase(status),
-          object_world_size(object_world_size),
-          object_frame(object_frame),
-          object_activation(object_activation) {}
-    Response(Status status) : Response(status, {}, {}, false) {}
-
-    const std::array<double, 3> object_world_size;
-    const std::array<double, 16> object_frame;
-    const bool object_activation;
   };
 };
 
