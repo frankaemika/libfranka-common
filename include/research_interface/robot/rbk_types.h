@@ -67,6 +67,7 @@ struct RobotState {
   std::array<double, 6> O_F_ext_hat_K;
   std::array<double, 6> K_F_ext_hat_K;
   std::array<double, 6> O_dP_EE_d;
+  std::array<double, 3> O_ddP_O;
   std::array<double, 2> elbow_c;
   std::array<double, 2> delbow_c;
   std::array<double, 2> ddelbow_c;
@@ -77,8 +78,8 @@ struct RobotState {
   std::array<double, 7> dtheta;
   MotionGeneratorMode motion_generator_mode;
   ControllerMode controller_mode;
-  std::array<bool, 37> errors;
-  std::array<bool, 37> reflex_reason;
+  std::array<bool, 41> errors;
+  std::array<bool, 41> reflex_reason;
   RobotMode robot_mode;
   double control_command_success_rate;
 };

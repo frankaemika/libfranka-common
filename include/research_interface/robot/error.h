@@ -42,7 +42,11 @@ enum class Error : size_t {
   kJointP2PInsufficientTorqueForPlanning,
   kTauJRangeViolation,
   kInstabilityDetection,
-  kJointMoveInWrongDirection
+  kJointMoveInWrongDirection,
+  kCartesianSplineViolation,
+  kJointViaPlanLimitViolation,
+  kGravityVectorInitializationTimeout,
+  kGravityVectorInvalidReading
 };
 
 const char* getErrorName(Error error) {
@@ -121,6 +125,14 @@ const char* getErrorName(Error error) {
       return "instability_detected";
     case Error::kJointMoveInWrongDirection:
       return "joint_move_in_wrong_direction";
+    case Error::kCartesianSplineViolation:
+      return "cartesian_spline_motion_generator_violation";
+    case Error::kJointViaPlanLimitViolation:
+      return "joint_via_motion_generator_planning_joint_limit_violation";
+    case Error::kGravityVectorInitializationTimeout:
+      return "gravity_vector_initialization_timeout";
+    case Error::kGravityVectorInvalidReading:
+      return "gravity_vector_invalid_reading";
   }
   throw std::logic_error("Invalid Error given.");
 }
