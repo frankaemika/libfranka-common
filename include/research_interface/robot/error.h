@@ -45,8 +45,8 @@ enum class Error : size_t {
   kJointMoveInWrongDirection,
   kCartesianSplineViolation,
   kJointViaPlanLimitViolation,
-  kGravityVectorInitializationTimeout,
-  kGravityVectorInvalidReading
+  kBaseAccelerationInitializationTimeout,
+  kBaseAccelerationInvalidReading
 };
 
 const char* getErrorName(Error error) {
@@ -129,10 +129,10 @@ const char* getErrorName(Error error) {
       return "cartesian_spline_motion_generator_violation";
     case Error::kJointViaPlanLimitViolation:
       return "joint_via_motion_generator_planning_joint_limit_violation";
-    case Error::kGravityVectorInitializationTimeout:
-      return "gravity_vector_initialization_timeout";
-    case Error::kGravityVectorInvalidReading:
-      return "gravity_vector_invalid_reading";
+    case Error::kBaseAccelerationInitializationTimeout:
+      return "base_acceleration_initialization_timeout";
+    case Error::kBaseAccelerationInvalidReading:
+      return "base_acceleration_invalid_reading";
   }
   throw std::logic_error("Invalid Error given.");
 }
