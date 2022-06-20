@@ -21,11 +21,6 @@ struct CommandTraits<StopMove> {
 };
 
 template <>
-struct CommandTraits<GetCartesianLimit> {
-  static constexpr const char* kName = "Get Cartesian Limit";
-};
-
-template <>
 struct CommandTraits<SetCollisionBehavior> {
   static constexpr const char* kName = "Set Collision Behavior";
 };
