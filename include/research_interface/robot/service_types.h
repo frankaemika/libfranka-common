@@ -88,7 +88,11 @@ struct CommandBase {
 
   static constexpr Command kCommand = C;
 
-  enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected };
+  enum class Status : uint8_t {
+    kSuccess,
+    kCommandNotPossibleRejected,
+    kCommandRejectedDueToActivatedSafetyFunctions
+  };
 
   using Header = CommandHeader;
   using Request = RequestBase<T>;
@@ -99,7 +103,12 @@ struct CommandBase {
 
 template <typename T, Command C>
 struct GetterSetterCommandBase : CommandBase<T, C> {
-  enum class Status : uint8_t { kSuccess, kCommandNotPossibleRejected, kInvalidArgumentRejected };
+  enum class Status : uint8_t {
+    kSuccess,
+    kCommandNotPossibleRejected,
+    kInvalidArgumentRejected,
+    kCommandRejectedDueToActivatedSafetyFunctions
+  };
 };
 
 struct Connect : CommandBase<Connect, Command::kConnect> {
@@ -137,6 +146,8 @@ struct Move : public CommandBase<Move, Command::kMove> {
     kSuccess,
     kMotionStarted,
     kPreempted,
+    kPreemptedDueToActivatedSafetyFunctions,
+    kCommandRejectedDueToActivatedSafetyFunctions,
     kCommandNotPossibleRejected,
     kStartAtSingularPoseRejected,
     kInvalidArgumentRejected,
@@ -175,6 +186,7 @@ struct StopMove : public CommandBase<StopMove, Command::kStopMove> {
   enum class Status : uint8_t {
     kSuccess,
     kCommandNotPossibleRejected,
+    kCommandRejectedDueToActivatedSafetyFunctions,
     kEmergencyAborted,
     kReflexAborted,
     kAborted
@@ -298,6 +310,7 @@ struct AutomaticErrorRecovery
   enum class Status : uint8_t {
     kSuccess,
     kCommandNotPossibleRejected,
+    kCommandRejectedDueToActivatedSafetyFunctions,
     kManualErrorRecoveryRequiredRejected,
     kReflexAborted,
     kEmergencyAborted,
