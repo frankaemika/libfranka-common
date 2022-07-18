@@ -28,7 +28,6 @@ enum class Command : uint32_t {
   kSetEEToK,
   kSetNEToEE,
   kSetLoad,
-  kSetFilters,
   kAutomaticErrorRecovery,
   kLoadModelLibrary
 };
@@ -281,27 +280,6 @@ struct SetLoad : public GetterSetterCommandBase<SetLoad, Command::kSetLoad> {
     const double m_load;
     const std::array<double, 3> F_x_Cload;
     const std::array<double, 9> I_load;
-  };
-};
-
-struct SetFilters : public GetterSetterCommandBase<SetFilters, Command::kSetFilters> {
-  struct Request : public RequestBase<SetFilters> {
-    Request(double joint_position_filter_frequency,
-            double joint_velocity_filter_frequency,
-            double cartesian_position_filter_frequency,
-            double cartesian_velocity_filter_frequency,
-            double controller_filter_frequency)
-        : joint_position_filter_frequency(joint_position_filter_frequency),
-          joint_velocity_filter_frequency(joint_velocity_filter_frequency),
-          cartesian_position_filter_frequency(cartesian_position_filter_frequency),
-          cartesian_velocity_filter_frequency(cartesian_velocity_filter_frequency),
-          controller_filter_frequency(controller_filter_frequency) {}
-
-    const double joint_position_filter_frequency;
-    const double joint_velocity_filter_frequency;
-    const double cartesian_position_filter_frequency;
-    const double cartesian_velocity_filter_frequency;
-    const double controller_filter_frequency;
   };
 };
 
