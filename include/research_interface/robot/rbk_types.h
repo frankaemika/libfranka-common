@@ -15,7 +15,8 @@ enum class MotionGeneratorMode : uint8_t {
   kJointPosition,
   kJointVelocity,
   kCartesianPosition,
-  kCartesianVelocity
+  kCartesianVelocity,
+  kNone
 };
 
 enum class ControllerMode : uint8_t {

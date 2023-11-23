@@ -138,7 +138,8 @@ struct Move : public CommandBase<Move, Command::kMove> {
     kJointPosition,
     kJointVelocity,
     kCartesianPosition,
-    kCartesianVelocity
+    kCartesianVelocity,
+    kNone
   };
 
   enum class Status : uint8_t {
