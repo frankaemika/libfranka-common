@@ -239,7 +239,7 @@ struct Move : public CommandBase<Move, Command::kMove> {
             const Deviation &maximum_path_deviation,
             const Deviation &maximum_goal_pose_deviation,
             bool use_async_motion_generator = false,
-            const std::optional<std::vector<double>> &maximum_velocity = std::nullopt)
+            const std::optional<std::array<double, 7>> &maximum_velocity = std::nullopt)
         : controller_mode(controller_mode),
           motion_generator_mode(motion_generator_mode),
           maximum_path_deviation(maximum_path_deviation),
